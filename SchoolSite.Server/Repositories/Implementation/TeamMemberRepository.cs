@@ -67,11 +67,19 @@ namespace SchoolSite.Server.Repositories.Implementation
 
             if (teamMemberDb != null)
             {
-                teamMemberDb = TeamMemberMapper.ToTeamMember(teamMemberDto);
+                teamMemberDb.Id = teamMemberDto.Id;
+                teamMemberDb.Name = teamMemberDto.Name;
+                teamMemberDb.Role = teamMemberDto.Role;
+                teamMemberDb.Department = teamMemberDto.Department;
+                teamMemberDb.Bio = teamMemberDto.Bio;
+                teamMemberDb.ImagePath = teamMemberDto.ImagePath;
 
                 _context.TeamMembers.Update(teamMemberDb);
                 await _context.SaveChangesAsync();
+
             }
+
+            
         }
     }
 }

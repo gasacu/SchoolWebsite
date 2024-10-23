@@ -67,7 +67,10 @@ namespace SchoolSite.Server.Repositories.Implementation
 
             if (documentDb != null)
             {
-                documentDb = DocumentMapper.ToDocument(documentDto);
+                documentDb.Id = documentDto.Id;
+                documentDb.Title = documentDto.Title;
+                documentDb.DocumentUrl = documentDto.DocumentUrl;
+                documentDb.IsEvent = documentDto.IsEvent;
 
                 _context.Documents.Update(documentDb);
                 await _context.SaveChangesAsync();

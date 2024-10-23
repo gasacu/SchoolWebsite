@@ -67,7 +67,8 @@ namespace SchoolSite.Server.Repositories.Implementation
 
             if (eventDb != null)
             {
-                eventDb = EventMapper.ToEvent(eventDto);
+                eventDb.Id = eventDto.Id;
+                eventDb.Title = eventDto.Title;
 
                 _context.Events.Update(eventDb);
                 await _context.SaveChangesAsync();

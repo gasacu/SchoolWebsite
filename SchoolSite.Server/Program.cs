@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SchoolSite.Server.Context;
 using Microsoft.OpenApi.Models;
+using SchoolSite.Server.Repositories.Interfaces;
+using SchoolSite.Server.Repositories.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +15,7 @@ builder.Services.AddDbContext<SchoolDbContext>(options =>
 // CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CorsPolicy", builder =>
+    options.AddPolicy("MyCorsPolicy", builder =>
     {
         builder.WithOrigins("http://localhost:4200")
         .AllowAnyMethod()
@@ -23,40 +25,46 @@ builder.Services.AddCors(options =>
     
 });
 
+// Add the repository to the DI (dependency injection)
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IGalleryImageRepository, GalleryImageRepository>();
+builder.Services.AddScoped<IGalleryRepository, GalleryRepository>();
+builder.Services.AddScoped<IPageContentRepository, PageContentRepository>();
+builder.Services.AddScoped<ITeamMemberRepository, TeamMemberRepository>();
+
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen( c =>
-{
-    c.AddServer(new OpenApiServer
-    {
-        Description = "Development Server",
-        Url = "https://localhost:5036"
-    });
-});
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-app.UseCors("CorsPolicy");
+app.UseCors("MyCorsPolicy");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+        c.RoutePrefix = string.Empty;
+    });
 }
 
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapFallbackToFile("/index.html");
+//app.MapFallbackToFile("/index.html");
 
 app.Run();

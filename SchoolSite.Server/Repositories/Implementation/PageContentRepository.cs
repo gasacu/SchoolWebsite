@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SchoolSite.Server.Context;
 using SchoolSite.Server.DTOs;
+using SchoolSite.Server.Entities;
 using SchoolSite.Server.Mappers;
 using SchoolSite.Server.Repositories.Interfaces;
 
@@ -67,7 +68,9 @@ namespace SchoolSite.Server.Repositories.Implementation
 
             if (pageContentDb != null)
             {
-                pageContentDb = PageContentMapper.ToPageContent(pageContentDto);
+                pageContentDb.Id = pageContentDto.Id;
+                pageContentDb.PageName = pageContentDto.PageName;
+                pageContentDb.Content = pageContentDto.Content;
 
                 _context.PageContents.Update(pageContentDb);
                 await _context.SaveChangesAsync();

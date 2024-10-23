@@ -69,7 +69,10 @@ namespace SchoolSite.Server.Repositories.Implementation
         
             if(adminDb != null)
             {
-                adminDb = AdminMapper.ToAdmin(adminDto);
+                adminDb.Id = adminDto.Id;
+                adminDb.FullName = adminDto.FullName;
+                adminDb.Username = adminDto.Username;
+                adminDb.PasswordHash = adminDto.PasswordHash;
 
                 _context.Admins.Update(adminDb);
                 await _context.SaveChangesAsync();

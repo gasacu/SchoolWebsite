@@ -67,7 +67,9 @@ namespace SchoolSite.Server.Repositories.Implementation
 
             if (galleryDb != null)
             {
-                galleryDb = GalleryMapper.ToGallery(galleryDto);
+                galleryDb.Id = galleryDto.Id;
+                galleryDb.Title = galleryDto.Title;
+                galleryDb.Description = galleryDto.Description;
 
                 _context.Galleries.Update(galleryDb);
                 await _context.SaveChangesAsync();

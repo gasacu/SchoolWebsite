@@ -67,7 +67,9 @@ namespace SchoolSite.Server.Repositories.Implementation
 
             if (galleryImageDb != null)
             {
-                galleryImageDb = GalleryImageMapper.ToGalleryImage(galleryImageDto);
+                galleryImageDb.Id = galleryImageDto.Id;
+                galleryImageDb.ImagePath = galleryImageDto.ImagePath;
+                galleryImageDb.UploadedAt = galleryImageDto.UploadedAt;
 
                 _context.GalleryImages.Update(galleryImageDb);
                 await _context.SaveChangesAsync();
