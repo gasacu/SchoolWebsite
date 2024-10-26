@@ -1,0 +1,23 @@
+<h2>Documents</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Document URL</th>
+            <th>Is Event?</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let document of documents">
+            <td>{{document.id}}</td>
+            <td>{{document.title}}</td>
+            <td>{{document.documentUrl}}</td>
+            <td>{{document.isEvent}}</td>
+            <td>
+                <button (click)="deleteDocument(document.id)">Delete</button>
+                <button (click)="editDocument(document.id)">Edit</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

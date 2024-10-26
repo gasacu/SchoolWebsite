@@ -1,0 +1,27 @@
+<h2>{{isEditing? 'Edit' : 'Create'}} Document</h2>
+
+<div *ngIf="errorMessage != ''">
+    {{errorMessage}}
+</div>
+
+<form (ngSubmit)="onSubmit()">
+
+    <div>
+        <label>Title</label>
+        <input type="text" name="title" [(ngModel)]="document.title" />
+    </div>
+
+    <div>
+        <label>Document URL</label>
+        <input type="text" name="documentUrl" [(ngModel)]="document.documentUrl" />
+    </div>
+
+    <div>
+        <label>Is Event?</label>
+        <input type="text" name="isEvent" [(ngModel)]="document.isEvent" />
+    </div>
+    
+
+    <button type="submit">{{isEditing? 'Edit' : 'Create'}}</button>
+</form>
+

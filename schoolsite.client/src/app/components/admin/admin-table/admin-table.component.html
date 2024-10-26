@@ -1,0 +1,23 @@
+<h2>Admins</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Full Name</th>
+            <th>Username</th>
+            <th>Password</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let admin of admins">
+            <td>{{admin.id}}</td>
+            <td>{{admin.fullName}}</td>
+            <td>{{admin.username}}</td>
+            <td>{{admin.passwordHash}}</td>
+            <td>
+                <button (click)="deleteAdmin(admin.id)">Delete</button>
+                <button (click)="editAdmin(admin.id)">Edit</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

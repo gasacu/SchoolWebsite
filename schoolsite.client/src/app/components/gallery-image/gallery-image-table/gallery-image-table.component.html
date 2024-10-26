@@ -1,0 +1,24 @@
+<h2>Gallery Images</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Image</th>
+            <th>Description</th>
+            <th>Uploaded at</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let galleryImage of galleryImages">
+            <td>{{galleryImage.id}}</td>
+            <td>{{galleryImage.imagePath}}</td>
+            <td>{{galleryImage.description}}</td>
+            <td>{{galleryImage.uploadedAt}}</td>
+            <td>
+                <button (click)="deleteGalleryImage(galleryImage.id)">Delete</button>
+                <button (click)="editGalleryImage(galleryImage.id)">Edit</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+

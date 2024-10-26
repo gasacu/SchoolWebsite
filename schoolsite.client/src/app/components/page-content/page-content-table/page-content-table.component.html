@@ -1,0 +1,21 @@
+<h2>Pages</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Page name</th>
+            <th>Content</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let pageContent of pageContents">
+            <td>{{pageContent.id}}</td>
+            <td>{{pageContent.pageName}}</td>
+            <td>{{pageContent.content}}</td>
+            <td>
+                <button (click)="deletePageContent(pageContent.id)">Delete</button>
+                <button (click)="editPageContent(pageContent.id)">Edit</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,16 @@
+<h2>{{isEditing? 'Edit' : 'Create'}} Event</h2>
+
+<div *ngIf="errorMessage != ''">
+    {{errorMessage}}
+</div>
+
+<form (ngSubmit)="onSubmit()">
+
+    <div>
+        <label>Title</label>
+        <input type="text" name="title" [(ngModel)]="event.title" />
+    </div>
+
+    <button type="submit">{{isEditing? 'Edit' : 'Create'}}</button>
+</form>
+

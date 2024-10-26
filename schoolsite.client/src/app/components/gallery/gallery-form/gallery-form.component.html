@@ -1,0 +1,32 @@
+<h2>{{isEditing? 'Edit' : 'Create'}} Gallery</h2>
+
+<div *ngIf="errorMessage != ''">
+    {{errorMessage}}
+</div>
+
+<form (ngSubmit)="onSubmit()">
+
+    <div>
+        <label>Title</label>
+        <input type="text" name="title" [(ngModel)]="gallery.title" />
+    </div>
+
+    <div>
+        <label>Description</label>
+        <input type="text" name="description" [(ngModel)]="gallery.description" />
+    </div>
+
+    <div>
+        <label>Created date</label>
+        <input type="datetime" name="createdDate" [(ngModel)]="gallery.createdDate" />
+    </div>
+
+    <div>
+        <label>Updated date</label>
+        <input type="datetime" name="updatedDate" [(ngModel)]="gallery.updatedDate" />
+    </div>
+    
+
+    <button type="submit">{{isEditing? 'Edit' : 'Create'}}</button>
+</form>
+

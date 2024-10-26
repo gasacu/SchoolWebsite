@@ -1,0 +1,27 @@
+<h2>{{isEditing? 'Edit' : 'Create'}} Gallery Image</h2>
+
+<div *ngIf="errorMessage != ''">
+    {{errorMessage}}
+</div>
+
+<form (ngSubmit)="onSubmit()">
+
+    <div>
+        <label>Image</label>
+        <input type="text" name="imagePath" [(ngModel)]="galleryImage.imagePath" />
+    </div>
+
+    <div>
+        <label>Description</label>
+        <input type="text" name="description" [(ngModel)]="galleryImage.description" />
+    </div>
+
+    <div>
+        <label>Uploaded at</label>
+        <input type="text" name="uploadedAt" [(ngModel)]="galleryImage.uploadedAt" />
+    </div>
+    
+
+    <button type="submit">{{isEditing? 'Edit' : 'Create'}}</button>
+</form>
+

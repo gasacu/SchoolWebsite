@@ -1,0 +1,36 @@
+<h2>{{isEditing? 'Edit' : 'Create'}} Team Member</h2>
+
+<div *ngIf="errorMessage != ''">
+    {{errorMessage}}
+</div>
+
+<form (ngSubmit)="onSubmit()">
+
+    <div>
+        <label>Name</label>
+        <input type="text" name="name" [(ngModel)]="teamMember.name" />
+    </div>
+
+    <div>
+        <label>Role</label>
+        <input type="text" name="role" [(ngModel)]="teamMember.role" />
+    </div>
+
+    <div>
+        <label>Department</label>
+        <input type="text" name="department" [(ngModel)]="teamMember.department" />
+    </div>
+
+    <div>
+        <label>Bio</label>
+        <input type="text" name="bio" [(ngModel)]="teamMember.bio" />
+    </div>
+
+    <div>
+        <label>ImagePath</label>
+        <input type="text" name="imagePath" [(ngModel)]="teamMember.imagePath" />
+    </div>
+    
+
+    <button type="submit">{{isEditing? 'Edit' : 'Create'}}</button>
+</form>

@@ -1,0 +1,28 @@
+<h2>Team Members</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Deparment</th>
+            <th>Bio</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let teamMember of teamMembers">
+            <td>{{teamMember.id}}</td>
+            <td>{{teamMember.name}}</td>
+            <td>{{teamMember.role}}</td>
+            <td>{{teamMember.department}}</td>
+            <td>{{teamMember.bio}}</td>
+            <td>{{teamMember.imagePath}}</td>
+            <td>
+                <button (click)="deleteTeamMember(teamMember.id)">Delete</button>
+                <button (click)="editTeamMember(teamMember.id)">Edit</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

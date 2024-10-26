@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { AdminTableComponent } from './admin-table/admin-table.component';
-import { DocumentTableComponent } from './document-table/document-table.component';
-import { EventTableComponent } from './event-table/event-table.component';
-import { GalleryImageTableComponent } from './gallery-image-table/gallery-image-table.component';
-import { GalleryTableComponent } from './gallery-table/gallery-table.component';
-import { PageContentTableComponent } from './page-content-table/page-content-table.component';
-import { TeamMemberTableComponent } from './team-member-table/team-member-table.component';
+import { AdminTableComponent } from './components/admin/admin-table/admin-table.component';
+import { DocumentTableComponent } from './components/document/document-table/document-table.component';
+import { EventTableComponent } from './components/event/event-table/event-table.component';
+import { GalleryImageTableComponent } from './components/gallery-image/gallery-image-table/gallery-image-table.component';
+import { GalleryTableComponent } from './components/gallery/gallery-table/gallery-table.component';
+import { PageContentTableComponent } from './components/page-content/page-content-table/page-content-table.component';
+import { TeamMemberTableComponent } from './components/team-member/team-member-table/team-member-table.component';
 import { RouterModule, RouterOutlet } from '@angular/router';
 
 

@@ -1,0 +1,27 @@
+<h2>{{isEditing? 'Edit' : 'Create'}} Admin</h2>
+
+<div *ngIf="errorMessage != ''">
+    {{errorMessage}}
+</div>
+
+<form (ngSubmit)="onSubmit()">
+
+    <div>
+        <label>Name</label>
+        <input type="text" name="fullName" [(ngModel)]="admin.fullName" />
+    </div>
+
+    <div>
+        <label>Username</label>
+        <input type="text" name="username" [(ngModel)]="admin.username" />
+    </div>
+
+    <div>
+        <label>Password</label>
+        <input type="text" name="passwordHash" [(ngModel)]="admin.passwordHash" />
+    </div>
+    
+
+    <button type="submit">{{isEditing? 'Edit' : 'Create'}}</button>
+</form>
+
