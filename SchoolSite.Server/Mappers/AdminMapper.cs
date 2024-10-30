@@ -12,9 +12,7 @@ namespace SchoolSite.Server.Mappers
                 Id = adminDto.Id,
                 FullName = adminDto.FullName,
                 Username = adminDto.Username,
-                PasswordHash = adminDto.PasswordHash,
-                Documents = adminDto.Documents,
-                Galleries = adminDto.Galleries
+                PasswordHash = adminDto.PasswordHash
             };
         }
 
@@ -25,9 +23,7 @@ namespace SchoolSite.Server.Mappers
                 Id = admin.Id,
                 FullName = admin.FullName,
                 Username = admin.Username,
-                PasswordHash = admin.PasswordHash,
-                Documents = admin.Documents,
-                Galleries = admin.Galleries
+                PasswordHash = admin.PasswordHash
             };
         }
     }

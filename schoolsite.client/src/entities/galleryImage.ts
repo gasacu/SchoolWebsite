@@ -1,6 +1,9 @@
+import { Gallery } from "./gallery";
+
 export interface GalleryImage {
     id: number;
     imagePath: string;
-    description: string;
-    uploadedAt: Date;
+    createdDate: Date;
+    galleryId: number;
+    // gallery?: Gallery;
 }

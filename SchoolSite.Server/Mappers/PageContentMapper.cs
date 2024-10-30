@@ -11,7 +11,9 @@ namespace SchoolSite.Server.Mappers
             {
                 Id = pageContentDto.Id,
                 PageName = pageContentDto.PageName,
-                Content = pageContentDto.Content
+                Content = pageContentDto.Content,
+                CreatedDate = pageContentDto.CreatedDate,
+                UpdatedDate = pageContentDto.UpdatedDate
             };
         }
 
@@ -21,7 +23,9 @@ namespace SchoolSite.Server.Mappers
             {
                 Id = pageContent.Id,
                 PageName = pageContent.PageName,
-                Content = pageContent.Content
+                Content = pageContent.Content,
+                CreatedDate = pageContent.CreatedDate,
+                UpdatedDate = pageContent.UpdatedDate
             };
         }
     }

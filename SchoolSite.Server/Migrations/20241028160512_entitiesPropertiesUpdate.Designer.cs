@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SchoolSite.Server.Context;
 
@@ -11,9 +12,11 @@ using SchoolSite.Server.Context;
 namespace SchoolSite.Server.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    partial class SchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241028160512_entitiesPropertiesUpdate")]
+    partial class entitiesPropertiesUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +50,7 @@ namespace SchoolSite.Server.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Admins", (string)null);
+                    b.ToTable("Admins");
                 });
 
             modelBuilder.Entity("SchoolSite.Server.Entities.Document", b =>
@@ -74,7 +77,7 @@ namespace SchoolSite.Server.Migrations
                     b.HasIndex("DocumentUrl")
                         .IsUnique();
 
-                    b.ToTable("Documents", (string)null);
+                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("SchoolSite.Server.Entities.Gallery", b =>
@@ -101,7 +104,7 @@ namespace SchoolSite.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Galleries", (string)null);
+                    b.ToTable("Galleries");
                 });
 
             modelBuilder.Entity("SchoolSite.Server.Entities.GalleryImage", b =>
@@ -129,7 +132,7 @@ namespace SchoolSite.Server.Migrations
                     b.HasIndex("ImagePath")
                         .IsUnique();
 
-                    b.ToTable("GalleryImages", (string)null);
+                    b.ToTable("GalleryImages");
                 });
 
             modelBuilder.Entity("SchoolSite.Server.Entities.PageContent", b =>
@@ -159,7 +162,7 @@ namespace SchoolSite.Server.Migrations
                     b.HasIndex("PageName")
                         .IsUnique();
 
-                    b.ToTable("PageContents", (string)null);
+                    b.ToTable("PageContents");
                 });
 
             modelBuilder.Entity("SchoolSite.Server.Entities.TeamMember", b =>
@@ -192,7 +195,7 @@ namespace SchoolSite.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TeamMembers", (string)null);
+                    b.ToTable("TeamMembers");
                 });
 
             modelBuilder.Entity("SchoolSite.Server.Entities.GalleryImage", b =>

@@ -8,14 +8,12 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AdminTableComponent } from './components/admin/admin-table/admin-table.component';
 import { DocumentTableComponent } from './components/document/document-table/document-table.component';
-import { EventTableComponent } from './components/event/event-table/event-table.component';
 import { GalleryImageTableComponent } from './components/gallery-image/gallery-image-table/gallery-image-table.component';
 import { GalleryTableComponent } from './components/gallery/gallery-table/gallery-table.component';
 import { PageContentTableComponent } from './components/page-content/page-content-table/page-content-table.component';
 import { TeamMemberTableComponent } from './components/team-member/team-member-table/team-member-table.component';
 import { AdminFormComponent } from './components/admin/admin-form/admin-form.component';
 import { DocumentFormComponent } from './components/document/document-form/document-form.component';
-import { EventFormComponent } from './components/event/event-form/event-form.component';
 import { GalleryImageFormComponent } from './components/gallery-image/gallery-image-form/gallery-image-form.component';
 import { GalleryFormComponent } from './components/gallery/gallery-form/gallery-form.component';
 import { PageContentFormComponent } from './components/page-content/page-content-form/page-content-form.component';
@@ -26,14 +24,12 @@ import { TeamMemberFormComponent } from './components/team-member/team-member-fo
     AppComponent,
     AdminTableComponent,
     DocumentTableComponent,
-    EventTableComponent,
     GalleryImageTableComponent,
     GalleryTableComponent,
     PageContentTableComponent,
     TeamMemberTableComponent,
     AdminFormComponent,
     DocumentFormComponent,
-    EventFormComponent,
     GalleryImageFormComponent,
     GalleryFormComponent,
     PageContentFormComponent,

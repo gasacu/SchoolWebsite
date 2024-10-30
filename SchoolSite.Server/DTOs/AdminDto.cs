@@ -7,7 +7,6 @@ namespace SchoolSite.Server.DTOs
     {
         public int Id { get; set; }
 
-
         [StringLength(64, ErrorMessage = "Full name cannot be longer than 64 characters.")]
         [Required(ErrorMessage = "Full name is required.")]
         public string FullName { get; set; }
@@ -23,8 +22,5 @@ namespace SchoolSite.Server.DTOs
         [Required(ErrorMessage = "Password is required.")]
         public string PasswordHash { get; set; }
 
-
-        public ICollection<Document> Documents { get; set; }
-        public ICollection<Gallery> Galleries { get; set; }
     }
 }

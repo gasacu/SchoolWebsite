@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SchoolSite.Server.Context;
 using SchoolSite.Server.DTOs;
+using SchoolSite.Server.Entities;
 using SchoolSite.Server.Mappers;
 using SchoolSite.Server.Repositories.Interfaces;
 
@@ -35,10 +36,10 @@ namespace SchoolSite.Server.Repositories.Implementation
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<GalleryImageDto>> GetAllAsync()
+        public async Task<IList<GalleryImageDto>> GetImagesByGalleryIdAsync(int galleryId)
         {
             var galleryImages = new List<GalleryImageDto>();
-            var galleryImagesDb = await _context.GalleryImages.ToListAsync();
+            var galleryImagesDb = await _context.GalleryImages.Where(img => img.GalleryId == galleryId).ToListAsync();
 
             if (galleryImagesDb?.Any() == true)
             {
@@ -52,13 +53,17 @@ namespace SchoolSite.Server.Repositories.Implementation
             return galleryImages;
         }
 
-        public async Task<GalleryImageDto?> GetByIdAsync(int id)
+        public async Task<GalleryImageDto> GetGalleryImageByIdAsync(int id)
         {
-            var galleryImage = await _context.GalleryImages.FindAsync(id);
+            var galleryImage = await _context.GalleryImages.FirstOrDefaultAsync(x => x.Id == id);
 
             var galleryImageDto = GalleryImageMapper.ToGalleryImageDto(galleryImage);
 
             return galleryImageDto;
+        }
+        public async Task<GalleryImage?> GetById(int id)
+        {
+            return await _context.GalleryImages.FindAsync(id);
         }
 
         public async Task UpdateGalleryImageAsync(GalleryImageDto galleryImageDto)
@@ -69,7 +74,8 @@ namespace SchoolSite.Server.Repositories.Implementation
             {
                 galleryImageDb.Id = galleryImageDto.Id;
                 galleryImageDb.ImagePath = galleryImageDto.ImagePath;
-                galleryImageDb.UploadedAt = galleryImageDto.UploadedAt;
+                galleryImageDb.CreatedDate = galleryImageDto.CreatedDate;
+                galleryImageDb.GalleryId = galleryImageDto.GalleryId;
 
                 _context.GalleryImages.Update(galleryImageDb);
                 await _context.SaveChangesAsync();

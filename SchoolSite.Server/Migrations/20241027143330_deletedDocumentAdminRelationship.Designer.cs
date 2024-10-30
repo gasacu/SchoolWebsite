@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SchoolSite.Server.Context;
 
@@ -11,9 +12,11 @@ using SchoolSite.Server.Context;
 namespace SchoolSite.Server.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    partial class SchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241027143330_deletedDocumentAdminRelationship")]
+    partial class deletedDocumentAdminRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +50,7 @@ namespace SchoolSite.Server.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Admins", (string)null);
+                    b.ToTable("Admins");
                 });
 
             modelBuilder.Entity("SchoolSite.Server.Entities.Document", b =>
@@ -57,6 +60,9 @@ namespace SchoolSite.Server.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdminId")
+                        .HasColumnType("int");
 
                     b.Property<string>("DocumentUrl")
                         .IsRequired()
@@ -71,10 +77,12 @@ namespace SchoolSite.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AdminId");
+
                     b.HasIndex("DocumentUrl")
                         .IsUnique();
 
-                    b.ToTable("Documents", (string)null);
+                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("SchoolSite.Server.Entities.Gallery", b =>
@@ -84,6 +92,9 @@ namespace SchoolSite.Server.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdminId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -101,7 +112,9 @@ namespace SchoolSite.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Galleries", (string)null);
+                    b.HasIndex("AdminId");
+
+                    b.ToTable("Galleries");
                 });
 
             modelBuilder.Entity("SchoolSite.Server.Entities.GalleryImage", b =>
@@ -112,15 +125,15 @@ namespace SchoolSite.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("GalleryId")
                         .HasColumnType("int");
 
                     b.Property<string>("ImagePath")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -129,7 +142,7 @@ namespace SchoolSite.Server.Migrations
                     b.HasIndex("ImagePath")
                         .IsUnique();
 
-                    b.ToTable("GalleryImages", (string)null);
+                    b.ToTable("GalleryImages");
                 });
 
             modelBuilder.Entity("SchoolSite.Server.Entities.PageContent", b =>
@@ -144,22 +157,13 @@ namespace SchoolSite.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("PageName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PageName")
-                        .IsUnique();
-
-                    b.ToTable("PageContents", (string)null);
+                    b.ToTable("PageContents");
                 });
 
             modelBuilder.Entity("SchoolSite.Server.Entities.TeamMember", b =>
@@ -192,7 +196,30 @@ namespace SchoolSite.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TeamMembers", (string)null);
+                    b.ToTable("TeamMembers");
+                });
+
+            modelBuilder.Entity("SchoolSite.Server.Entities.Document", b =>
+                {
+                    b.HasOne("SchoolSite.Server.Entities.Admin", "Admin")
+                        .WithMany("Documents")
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Admin");
+                });
+
+            modelBuilder.Entity("SchoolSite.Server.Entities.Gallery", b =>
+                {
+                    b.HasOne("SchoolSite.Server.Entities.Admin", "Admin")
+                        .WithMany("Galleries")
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_Galleries_Admins");
+
+                    b.Navigation("Admin");
                 });
 
             modelBuilder.Entity("SchoolSite.Server.Entities.GalleryImage", b =>
@@ -205,6 +232,13 @@ namespace SchoolSite.Server.Migrations
                         .HasConstraintName("FK_GalleryImages_Galleries");
 
                     b.Navigation("Gallery");
+                });
+
+            modelBuilder.Entity("SchoolSite.Server.Entities.Admin", b =>
+                {
+                    b.Navigation("Documents");
+
+                    b.Navigation("Galleries");
                 });
 
             modelBuilder.Entity("SchoolSite.Server.Entities.Gallery", b =>

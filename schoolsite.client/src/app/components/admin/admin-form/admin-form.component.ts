@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Admin } from '../../../../entities/admin';
 import { AdminService } from '../../../services/admin.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -50,7 +49,7 @@ export class AdminFormComponent implements OnInit {
       this.adminService.editAdmin(this.admin)
       .subscribe({
         next: () => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/admins']);
         },
         error: (err) => {
           console.error(err);
@@ -63,7 +62,7 @@ export class AdminFormComponent implements OnInit {
       this.adminService.createAdmin(this.admin)
       .subscribe({
         next: () => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/admins']);
         },
         error: (err) => {
           console.error(err);

@@ -6,24 +6,19 @@ namespace SchoolSite.Server.DTOs
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(64)]
+        [StringLength(64, ErrorMessage = "Name cannot be longer than 64 characters.")]
+        [Required(ErrorMessage = "Name is required.")]
         public string Name { get; set; }
 
-        [Required]
-        [StringLength(128)]
+        [StringLength(128, ErrorMessage = "Role cannot be longer than 128 characters.")]
+        [Required(ErrorMessage = "Role is required.")]
         public string Role { get; set; }
 
-        [Required]
-        [StringLength(128)]
+        [StringLength(128, ErrorMessage = "Department cannot be longer than 128 characters.")]
+        [Required(ErrorMessage = "Department is required.")]
         public string Department { get; set; }
 
-        [Required]
-        [StringLength(256)]
         public string Bio { get; set; }
-
-        [Required]
-        [StringLength(256)]
         public string ImagePath { get; set; }
     }
 }

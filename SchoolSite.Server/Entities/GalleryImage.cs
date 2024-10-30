@@ -4,9 +4,8 @@
     {
         public int Id { get; set; }
         public string ImagePath { get; set; }
-        public DateTime UploadedAt { get; set; }
+        public DateTime CreatedDate { get; set; }
         public int GalleryId { get; set; }
-        public Gallery Gallery { get; set; }
 
     }
 }

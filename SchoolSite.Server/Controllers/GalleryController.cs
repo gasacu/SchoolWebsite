@@ -17,16 +17,16 @@ namespace SchoolSite.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GalleryDto>>> GetAllGalleriesAsync()
+        public async Task<ActionResult<IList<GalleryDto>>> GetAllGalleriesAsync()
         {
-            var allGalleries = await _galleryRepository.GetAllAsync();
+            var allGalleries = await _galleryRepository.GetAllGalleriesAsync();
             return Ok(allGalleries);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GalleryDto>> GetGalleryById(int id)
         {
-            var gallery = await _galleryRepository.GetByIdAsync(id);
+            var gallery = await _galleryRepository.GetGalleryByIdAsync(id);
 
             if (gallery == null)
             {
@@ -59,7 +59,6 @@ namespace SchoolSite.Server.Controllers
             }
 
             await _galleryRepository.UpdateGalleryAsync(galleryDto);
-
             return CreatedAtAction(nameof(GetGalleryById), new { id = galleryDto.Id }, galleryDto);
         }
     }

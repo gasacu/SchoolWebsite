@@ -7,16 +7,14 @@ namespace SchoolSite.Server.DTOs
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(255)]
+        [StringLength(256, ErrorMessage = "ImagePath cannot be longer than 256 characters.")]
+        [Required(ErrorMessage = "ImagePath is required.")]
         public string ImagePath { get; set; }
 
-        [Required]
-        public DateTime UploadedAt { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         [Required]
         public int GalleryId { get; set; }
-        public Gallery Gallery { get; set; }
 
     }
 }

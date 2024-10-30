@@ -1,27 +1,33 @@
-<h2>{{isEditing? 'Edit' : 'Create'}} Gallery Image</h2>
+<h2>{{ isEditing ? "Edit" : "Create" }} Gallery Image</h2>
 
 <div *ngIf="errorMessage != ''">
-    {{errorMessage}}
+  {{ errorMessage }}
 </div>
 
 <form (ngSubmit)="onSubmit()">
+  <div>
+    <label>Image path</label>
+    <input type="text" name="imagePath" [(ngModel)]="galleryImage.imagePath" />
+  </div>
 
-    <div>
-        <label>Image</label>
-        <input type="text" name="imagePath" [(ngModel)]="galleryImage.imagePath" />
-    </div>
+  <div>
+    <label>Created date</label>
+    <input
+      type="date"
+      name="createdDate"
+      [(ngModel)]="galleryImage.createdDate"
+    />
+  </div>
 
-    <div>
-        <label>Description</label>
-        <input type="text" name="description" [(ngModel)]="galleryImage.description" />
-    </div>
+  <div>
+    <label>Gallery id</label>
+    <input
+      type="text"
+      name="galleryId"
+      [(ngModel)]="galleryImage.galleryId"
+      readonly
+    />
+  </div>
 
-    <div>
-        <label>Uploaded at</label>
-        <input type="text" name="uploadedAt" [(ngModel)]="galleryImage.uploadedAt" />
-    </div>
-    
-
-    <button type="submit">{{isEditing? 'Edit' : 'Create'}}</button>
+  <button type="submit">{{ isEditing ? "Edit" : "Create" }}</button>
 </form>
-

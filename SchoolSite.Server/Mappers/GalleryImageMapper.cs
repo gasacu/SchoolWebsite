@@ -11,9 +11,8 @@ namespace SchoolSite.Server.Mappers
             {
                 Id = galleryImageDto.Id,
                 ImagePath = galleryImageDto.ImagePath,
-                UploadedAt = galleryImageDto.UploadedAt,
-                GalleryId = galleryImageDto.GalleryId,
-                Gallery = galleryImageDto.Gallery
+                CreatedDate = galleryImageDto.CreatedDate,
+                GalleryId = galleryImageDto.GalleryId
             };
         }
 
@@ -21,11 +20,10 @@ namespace SchoolSite.Server.Mappers
         {
             return new GalleryImageDto
             {
-                Id= galleryImage.Id,
+                Id = galleryImage.Id,
                 ImagePath = galleryImage.ImagePath,
-                UploadedAt= galleryImage.UploadedAt,
-                GalleryId = galleryImage.GalleryId,
-                Gallery = galleryImage.Gallery
+                CreatedDate = galleryImage.CreatedDate,
+                GalleryId = galleryImage.GalleryId
             };
         }
     }

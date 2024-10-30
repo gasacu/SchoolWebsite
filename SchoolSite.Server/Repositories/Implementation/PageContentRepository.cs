@@ -71,6 +71,8 @@ namespace SchoolSite.Server.Repositories.Implementation
                 pageContentDb.Id = pageContentDto.Id;
                 pageContentDb.PageName = pageContentDto.PageName;
                 pageContentDb.Content = pageContentDto.Content;
+                pageContentDb.CreatedDate = pageContentDto.CreatedDate;
+                pageContentDb.UpdatedDate = pageContentDto.UpdatedDate;
 
                 _context.PageContents.Update(pageContentDb);
                 await _context.SaveChangesAsync();

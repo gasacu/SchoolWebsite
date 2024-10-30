@@ -6,15 +6,14 @@ namespace SchoolSite.Server.Context
     public class SchoolDbContext : DbContext
     {
         // Constructor
-        public SchoolDbContext (DbContextOptions<SchoolDbContext> options) : base(options) 
+        public SchoolDbContext(DbContextOptions<SchoolDbContext> options) : base(options)
         {
-            
+
         }
 
         // Representations of the Entities in the database
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Document> Documents { get; set; }
-        public DbSet<Event> Events { get; set; }
         public DbSet<Gallery> Galleries { get; set; }
         public DbSet<GalleryImage> GalleryImages { get; set; }
         public DbSet<PageContent> PageContents { get; set; }
@@ -24,39 +23,55 @@ namespace SchoolSite.Server.Context
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<GalleryImage>()
+                .HasOne<Gallery>() 
+                .WithMany(g => g.GalleryImages)
+                .HasForeignKey(gi => gi.GalleryId) 
+                .OnDelete(DeleteBehavior.Cascade) 
+                .HasConstraintName("FK_GalleryImages_Galleries");
 
-            // Configure relationships and contraints
+            // Configure auto-increment ID's using Fluent API
+            modelBuilder.Entity<Admin>()
+                .Property(a => a.Id)
+                .ValueGeneratedOnAdd();
+
             modelBuilder.Entity<Document>()
-                .HasOne(a => a.Admin)
-                .WithMany(d => d.Documents)
-                .HasForeignKey(a => a.AdminId)
-                .HasConstraintName("FK_Documents_Admins");
-
-            modelBuilder.Entity<Event>()
-                .HasOne(d => d.Document)
-                .WithMany(e => e.Events)
-                .HasForeignKey(d => d.DocumentId)
-                .HasConstraintName("FK_Events_Documents");
+                .Property(d => d.Id)
+                .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Gallery>()
-                .HasOne(a => a.Admin)
-                .WithMany(g => g.Galleries)
-                .HasForeignKey(a => a.AdminId)
-                .HasConstraintName("FK_Galleries_Admins");
+                .Property(g => g.Id)
+                .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<GalleryImage>()
-               .HasOne(g => g.Gallery)
-               .WithMany(gi => gi.GalleryImages)
-               .HasForeignKey(g => g.GalleryId)
-               .HasConstraintName("FK_GalleryImages_Galleries");
+                .Property(gi => gi.Id)
+                .ValueGeneratedOnAdd();
 
-            
+            modelBuilder.Entity<PageContent>()
+                .Property(pc => pc.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<TeamMember>()
+                .Property(tm => tm.Id)
+                .ValueGeneratedOnAdd();
+
             // Unique index using Fluent API
             modelBuilder.Entity<Admin>()
                 .HasIndex(a => a.Username)
                 .IsUnique();
 
-            
+            modelBuilder.Entity<Document>()
+                .HasIndex(d => d.DocumentUrl)
+                .IsUnique();
+
+            modelBuilder.Entity<GalleryImage>()
+                .HasIndex(gi => gi.ImagePath)
+                .IsUnique();
+
+            modelBuilder.Entity<PageContent>()
+                .HasIndex(pc => pc.PageName)
+                .IsUnique();
+
         }
     }
 }

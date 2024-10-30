@@ -33,7 +33,7 @@ export class DocumentTableComponent {
   }
 
   editDocument(id: number) : void {
-    this.router.navigate(['/edit', id]);
+    this.router.navigate(['/documents/edit', id]);
   }
 
 }

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { PageContent } from '../../../../entities/pageContent';
 import { PageContentService } from '../../../services/page-content.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,7 +13,9 @@ export class PageContentFormComponent implements OnInit {
   pageContent: PageContent = {
     id: 0,
     pageName: '',
-    content: ''
+    content: '',
+    createdDate: new Date(),
+    updatedDate: new Date()
   }
 
   isEditing: boolean = false;
@@ -49,7 +50,7 @@ export class PageContentFormComponent implements OnInit {
       this.pageContentService.editPageContent(this.pageContent)
       .subscribe({
         next: () => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/page-contents']);
         },
         error: (err) => {
           console.error(err);
@@ -62,7 +63,7 @@ export class PageContentFormComponent implements OnInit {
       this.pageContentService.createPageContent(this.pageContent)
       .subscribe({
         next: () => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/page-contents']);
         },
         error: (err) => {
           console.error(err);

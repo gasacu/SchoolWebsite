@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Document } from '../../../../entities/document';
 import { DocumentService } from '../../../services/document.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -50,7 +49,7 @@ export class DocumentFormComponent implements OnInit {
       this.documentService.editDocument(this.document)
       .subscribe({
         next: () => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/documents']);
         },
         error: (err) => {
           console.error(err);
@@ -60,10 +59,11 @@ export class DocumentFormComponent implements OnInit {
 
     } else {
       // creating
+      console.log("Payload being sent:", this.document);
       this.documentService.createDocument(this.document)
       .subscribe({
         next: () => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/documents']);
         },
         error: (err) => {
           console.error(err);

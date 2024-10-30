@@ -51,7 +51,7 @@ export class TeamMemberFormComponent implements OnInit {
       this.teamMemberService.editTeamMember(this.teamMember)
       .subscribe({
         next: () => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/team-members']);
         },
         error: (err) => {
           console.error(err);
@@ -64,7 +64,7 @@ export class TeamMemberFormComponent implements OnInit {
       this.teamMemberService.createTeamMember(this.teamMember)
       .subscribe({
         next: () => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/team-members']);
         },
         error: (err) => {
           console.error(err);

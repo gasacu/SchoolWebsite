@@ -33,7 +33,7 @@ export class GalleryTableComponent {
   }
 
   editGallery(id: number) : void {
-    this.router.navigate(['/edit', id]);
+    this.router.navigate(['/galleries/edit', id]);
   }
 
 }

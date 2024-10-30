@@ -5,16 +5,15 @@ import { Observable } from 'rxjs';
 import { GalleryImage } from '../../entities/galleryImage';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GalleryImageService {
+  private apiUrl = `${environment.apiUrl}/galleryImage`;
 
-  private apiUrl = `${environment.apiUrl}/galleryImage`
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  getGalleryImages(): Observable<GalleryImage[]> {
-    return this.http.get<GalleryImage[]>(this.apiUrl);
+  getGalleryImagesByGalleryId(galleryId: number): Observable<GalleryImage[]> {
+    return this.http.get<GalleryImage[]>(`${this.apiUrl}/${galleryId}/images`);
   }
 
   getGalleryImageById(id: number): Observable<GalleryImage> {
@@ -30,6 +29,9 @@ export class GalleryImageService {
   }
 
   editGalleryImage(galleryImage: GalleryImage): Observable<GalleryImage> {
-    return this.http.put<GalleryImage>(`${this.apiUrl}/${galleryImage.id}`, galleryImage);
+    return this.http.put<GalleryImage>(
+      `${this.apiUrl}/${galleryImage.id}`,
+      galleryImage
+    );
   }
 }

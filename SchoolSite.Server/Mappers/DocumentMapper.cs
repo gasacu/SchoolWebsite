@@ -12,10 +12,7 @@ namespace SchoolSite.Server.Mappers
                 Id = documentDto.Id,
                 Title = documentDto.Title,
                 DocumentUrl = documentDto.DocumentUrl,
-                IsEvent = documentDto.IsEvent,
-                AdminId = documentDto.AdminId,
-                Admin = documentDto.Admin,
-                Events = documentDto.Events
+                IsEvent = documentDto.IsEvent
             };
         }
 
@@ -26,10 +23,7 @@ namespace SchoolSite.Server.Mappers
                 Id = document.Id,
                 Title = document.Title,
                 DocumentUrl = document.DocumentUrl,
-                IsEvent = document.IsEvent,
-                AdminId = document.AdminId,
-                Admin = document.Admin,
-                Events = document.Events
+                IsEvent = document.IsEvent
             };
         }
     }

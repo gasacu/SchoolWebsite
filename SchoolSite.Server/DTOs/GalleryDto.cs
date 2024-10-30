@@ -7,21 +7,17 @@ namespace SchoolSite.Server.DTOs
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(100)]
+        [StringLength(256, ErrorMessage = "Title cannot be longer than 256 characters.")]
+        [Required(ErrorMessage = "Title is required.")]
         public string Title { get; set; }
 
-
-        [StringLength(500)]
+        [StringLength(512, ErrorMessage = "Description cannot be longer than 512 characters.")]
+        [Required(ErrorMessage = "Description is required.")]
         public string Description { get; set; }
 
-        [Required]
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 
-        [Required]
-        public int AdminId { get; set; }
-        public Admin Admin { get; set; }
         public ICollection<GalleryImage> GalleryImages { get; set; }
     }
 }

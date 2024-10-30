@@ -9,10 +9,6 @@ import { AdminFormComponent } from './components/admin/admin-form/admin-form.com
 import { DocumentTableComponent } from './components/document/document-table/document-table.component';
 import { DocumentFormComponent } from './components/document/document-form/document-form.component';
 
-// Event components
-import { EventTableComponent } from './components/event/event-table/event-table.component';
-import { EventFormComponent } from './components/event/event-form/event-form.component';
-
 // Gallery components
 import { GalleryTableComponent } from './components/gallery/gallery-table/gallery-table.component';
 import { GalleryFormComponent } from './components/gallery/gallery-form/gallery-form.component';
@@ -30,7 +26,6 @@ import { TeamMemberTableComponent } from './components/team-member/team-member-t
 import { TeamMemberFormComponent } from './components/team-member/team-member-form/team-member-form.component';
 
 const routes: Routes = [
-
   // Admin routes
   { path: 'admins', component: AdminTableComponent },
   { path: 'admins/create', component: AdminFormComponent },
@@ -41,11 +36,6 @@ const routes: Routes = [
   { path: 'documents/create', component: DocumentFormComponent },
   { path: 'documents/edit/:id', component: DocumentFormComponent },
 
-  // Event routes
-  { path: 'events', component: EventTableComponent },
-  { path: 'events/create', component: EventFormComponent },
-  { path: 'events/edit/:id', component: EventFormComponent },
-
   // Gallery routes
   { path: 'galleries', component: GalleryTableComponent },
   { path: 'galleries/create', component: GalleryFormComponent },
@@ -53,7 +43,10 @@ const routes: Routes = [
 
   // GalleryImage routes
   { path: 'gallery-images', component: GalleryImageTableComponent },
-  { path: 'gallery-images/create', component: GalleryImageFormComponent },
+  {
+    path: 'gallery-images/create/:galleryId',
+    component: GalleryImageFormComponent,
+  },
   { path: 'gallery-images/edit/:id', component: GalleryImageFormComponent },
 
   // PageContent routes
@@ -62,18 +55,16 @@ const routes: Routes = [
   { path: 'page-contents/edit/:id', component: PageContentFormComponent },
 
   // TeamMember routes
-  {path: '', component: TeamMemberTableComponent},
-  {path: 'create', component: TeamMemberFormComponent},
-  {path: 'edit/:id', component: TeamMemberFormComponent},
+  { path: 'team-members', component: TeamMemberTableComponent },
+  { path: 'team-members/create', component: TeamMemberFormComponent },
+  { path: 'team-members/edit/:id', component: TeamMemberFormComponent },
 
   // Fallback for undefined routes
-  {path: 'team-members', redirectTo: '', pathMatch: 'full'}
-
-  
+  { path: '', redirectTo: '', pathMatch: 'full' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

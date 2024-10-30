@@ -28,7 +28,6 @@ builder.Services.AddCors(options =>
 // Add the repository to the DI (dependency injection)
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
-builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IGalleryImageRepository, GalleryImageRepository>();
 builder.Services.AddScoped<IGalleryRepository, GalleryRepository>();
 builder.Services.AddScoped<IPageContentRepository, PageContentRepository>();

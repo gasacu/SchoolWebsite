@@ -33,7 +33,7 @@ export class AdminTableComponent {
   }
 
   editAdmin(id: number) : void {
-    this.router.navigate(['/edit', id]);
+    this.router.navigate(['/admins/edit', id]);
   }
 
 }

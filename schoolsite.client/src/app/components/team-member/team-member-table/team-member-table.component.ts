@@ -33,7 +33,7 @@ export class TeamMemberTableComponent {
   }
 
   editTeamMember(id: number) : void {
-    this.router.navigate(['/edit', id]);
+    this.router.navigate(['/team-members/edit', id]);
   }
 
 }

@@ -9,6 +9,7 @@ namespace SchoolSite.Server.Repositories.Implementation
     public class GalleryRepository : IGalleryRepository
     {
         private readonly SchoolDbContext _context;
+
         public GalleryRepository(SchoolDbContext context)
         {
             _context = context;
@@ -35,10 +36,11 @@ namespace SchoolSite.Server.Repositories.Implementation
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<GalleryDto>> GetAllAsync()
+        public async Task<IList<GalleryDto>> GetAllGalleriesAsync()
         {
             var galleries = new List<GalleryDto>();
             var galleriesDb = await _context.Galleries.ToListAsync();
+            //var galleriesDb = await _context.Galleries.Include(g => g.GalleryImages).ToListAsync();
 
             if (galleriesDb?.Any() == true)
             {
@@ -52,9 +54,10 @@ namespace SchoolSite.Server.Repositories.Implementation
             return galleries;
         }
 
-        public async Task<GalleryDto?> GetByIdAsync(int id)
+        public async Task<GalleryDto> GetGalleryByIdAsync(int id)
         {
-            var gallery = await _context.Galleries.FindAsync(id);
+            var gallery = await _context.Galleries.FirstOrDefaultAsync(x => x.Id == id);
+            //var gallery = await _context.Galleries.Include(g => g.GalleryImages).FirstOrDefaultAsync(g => g.Id == id);
 
             var galleryDto = GalleryMapper.ToGalleryDto(gallery);
 
@@ -70,6 +73,9 @@ namespace SchoolSite.Server.Repositories.Implementation
                 galleryDb.Id = galleryDto.Id;
                 galleryDb.Title = galleryDto.Title;
                 galleryDb.Description = galleryDto.Description;
+                galleryDb.CreatedDate = galleryDto.CreatedDate;
+                galleryDb.UpdatedDate = galleryDto.UpdatedDate;
+                galleryDb.GalleryImages = galleryDto.GalleryImages;
 
                 _context.Galleries.Update(galleryDb);
                 await _context.SaveChangesAsync();

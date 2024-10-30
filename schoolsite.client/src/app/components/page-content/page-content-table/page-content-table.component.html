@@ -1,10 +1,13 @@
 <h2>Pages</h2>
+<a routerLink="/page-contents/create">Create</a>
 <table>
     <thead>
         <tr>
             <th>Id</th>
             <th>Page name</th>
             <th>Content</th>
+            <th>Created date</th>
+            <th>Updated date</th>
         </tr>
     </thead>
     <tbody>
@@ -12,6 +15,8 @@
             <td>{{pageContent.id}}</td>
             <td>{{pageContent.pageName}}</td>
             <td>{{pageContent.content}}</td>
+            <td>{{pageContent.createdDate}}</td>
+            <td>{{pageContent.updatedDate}}</td>
             <td>
                 <button (click)="deletePageContent(pageContent.id)">Delete</button>
                 <button (click)="editPageContent(pageContent.id)">Edit</button>

@@ -33,7 +33,7 @@ export class PageContentTableComponent {
   }
 
   editPageContent(id: number) : void {
-    this.router.navigate(['/edit', id]);
+    this.router.navigate(['/page-contents/edit', id]);
   }
 
 }

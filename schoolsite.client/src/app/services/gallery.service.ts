@@ -32,4 +32,5 @@ export class GalleryService {
   editGallery(gallery: Gallery): Observable<Gallery> {
     return this.http.put<Gallery>(`${this.apiUrl}/${gallery.id}`, gallery);
   }
+
 }

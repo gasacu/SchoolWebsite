@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SchoolSite.Server.DTOs;
+using SchoolSite.Server.Mappers;
 using SchoolSite.Server.Repositories.Implementation;
 using SchoolSite.Server.Repositories.Interfaces;
 
@@ -10,23 +11,25 @@ namespace SchoolSite.Server.Controllers
     public class GalleryImageController : ControllerBase
     {
         private readonly IGalleryImageRepository _galleryImageRepository;
+        private readonly IGalleryRepository _galleryRepository;
 
-        public GalleryImageController(IGalleryImageRepository galleryImageRepository)
+        public GalleryImageController(IGalleryImageRepository galleryImageRepository, IGalleryRepository galleryRepository)
         {
             _galleryImageRepository = galleryImageRepository;
+            _galleryRepository = galleryRepository;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<GalleryImageDto>>> GetAllGalleryImagesAsync()
+        [HttpGet("{galleryId}/images")]
+        public async Task<ActionResult<IEnumerable<GalleryImageDto>>> GetImagesByGalleryIdAsync(int galleryId)
         {
-            var allGalleryImages = await _galleryImageRepository.GetAllAsync();
+            var allGalleryImages = await _galleryImageRepository.GetImagesByGalleryIdAsync(galleryId);
             return Ok(allGalleryImages);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GalleryImageDto>> GetGalleryImageById(int id)
         {
-            var galleryImage = await _galleryImageRepository.GetByIdAsync(id);
+            var galleryImage = await _galleryImageRepository.GetGalleryImageByIdAsync(id);
 
             if (galleryImage == null)
             {
@@ -36,10 +39,25 @@ namespace SchoolSite.Server.Controllers
             return Ok(galleryImage);
         }
 
+
         [HttpPost]
         public async Task<ActionResult<GalleryImageDto>> CreateGalleryImage(GalleryImageDto galleryImageDto)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check if the Gallery exists
+            var galleryExists = await _galleryRepository.GetGalleryByIdAsync(galleryImageDto.GalleryId);
+
+            if(galleryExists == null)
+            {
+                return NotFound($"Gallery with ID {galleryImageDto.GalleryId} not found.");
+            }
+
             await _galleryImageRepository.AddGalleryImageAsync(galleryImageDto);
+           
             return CreatedAtAction(nameof(GetGalleryImageById), new { id = galleryImageDto.Id }, galleryImageDto);
         }
 
@@ -59,7 +77,6 @@ namespace SchoolSite.Server.Controllers
             }
 
             await _galleryImageRepository.UpdateGalleryImageAsync(galleryImageDto);
-
             return CreatedAtAction(nameof(GetGalleryImageById), new { id = galleryImageDto.Id }, galleryImageDto);
         }
     }

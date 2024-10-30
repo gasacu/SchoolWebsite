@@ -1,19 +1,18 @@
-<h2>Gallery Images</h2>
+<h2>Gallery Images for Galelry ID</h2>
+<a routerLink="/gallery-images/create">Create</a>
 <table>
     <thead>
         <tr>
             <th>Id</th>
             <th>Image</th>
-            <th>Description</th>
-            <th>Uploaded at</th>
+            <th>Created date</th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let galleryImage of galleryImages">
             <td>{{galleryImage.id}}</td>
             <td>{{galleryImage.imagePath}}</td>
-            <td>{{galleryImage.description}}</td>
-            <td>{{galleryImage.uploadedAt}}</td>
+            <td>{{galleryImage.createdDate}}</td>
             <td>
                 <button (click)="deleteGalleryImage(galleryImage.id)">Delete</button>
                 <button (click)="editGalleryImage(galleryImage.id)">Edit</button>

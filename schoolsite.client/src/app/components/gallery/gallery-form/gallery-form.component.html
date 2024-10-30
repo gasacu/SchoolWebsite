@@ -1,32 +1,43 @@
-<h2>{{isEditing? 'Edit' : 'Create'}} Gallery</h2>
+<h2>{{ isEditing ? "Edit" : "Create" }} Gallery</h2>
 
 <div *ngIf="errorMessage != ''">
-    {{errorMessage}}
+  {{ errorMessage }}
 </div>
 
 <form (ngSubmit)="onSubmit()">
+  <div>
+    <label>Title</label>
+    <input type="text" name="title" [(ngModel)]="gallery.title" />
+  </div>
 
-    <div>
-        <label>Title</label>
-        <input type="text" name="title" [(ngModel)]="gallery.title" />
-    </div>
+  <div>
+    <label>Description</label>
+    <input type="text" name="description" [(ngModel)]="gallery.description" />
+  </div>
 
-    <div>
-        <label>Description</label>
-        <input type="text" name="description" [(ngModel)]="gallery.description" />
-    </div>
+  <div>
+    <label>Created date</label>
+    <input type="date" name="createdDate" [(ngModel)]="gallery.createdDate" />
+  </div>
 
-    <div>
-        <label>Created date</label>
-        <input type="datetime" name="createdDate" [(ngModel)]="gallery.createdDate" />
-    </div>
+  <div>
+    <label>Updated date</label>
+    <input type="date" name="updatedDate" [(ngModel)]="gallery.updatedDate" />
+  </div>
 
-    <div>
-        <label>Updated date</label>
-        <input type="datetime" name="updatedDate" [(ngModel)]="gallery.updatedDate" />
-    </div>
-    
+  <button type="submit">{{ isEditing ? "Edit" : "Create" }}</button>
 
-    <button type="submit">{{isEditing? 'Edit' : 'Create'}}</button>
+  <a [routerLink]="['/gallery-images/create', gallery.id]">Add Image</a>
+
+  <div *ngIf="isEditing">
+    <h3>Gallery Images</h3>
+    <ul>
+      <li *ngFor="let image of gallery.galleryImages">
+        <span>{{ image.imagePath }}</span>
+        <button type="button" (click)="deleteGalleryImage(image.id)">
+          Delete
+        </button>
+      </li>
+    </ul>
+  </div>
 </form>
-

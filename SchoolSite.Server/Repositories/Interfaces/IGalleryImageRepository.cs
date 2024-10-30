@@ -1,11 +1,12 @@
 ﻿using SchoolSite.Server.DTOs;
+using SchoolSite.Server.Entities;
 
 namespace SchoolSite.Server.Repositories.Interfaces
 {
     public interface IGalleryImageRepository
     {
-        Task<IEnumerable<GalleryImageDto>> GetAllAsync();
-        Task<GalleryImageDto?> GetByIdAsync(int id);
+        Task<IList<GalleryImageDto>> GetImagesByGalleryIdAsync(int galleryId);
+        Task<GalleryImageDto> GetGalleryImageByIdAsync(int id);
         Task AddGalleryImageAsync(GalleryImageDto galleryImageDto);
         Task UpdateGalleryImageAsync(GalleryImageDto galleryImageDto);
         Task DeleteGalleryImageAsync(int id);

@@ -16,6 +16,16 @@
         <input type="text" name="content" [(ngModel)]="pageContent.content" />
     </div>
 
+    <div>
+        <label>Created date</label>
+        <input type="date" name="createdDate" [(ngModel)]="pageContent.createdDate" />
+    </div>
+
+    <div>
+        <label>Updated date</label>
+        <input type="date" name="updatedDate" [(ngModel)]="pageContent.updatedDate" />
+    </div>
+
     <button type="submit">{{isEditing? 'Edit' : 'Create'}}</button>
 </form>
 

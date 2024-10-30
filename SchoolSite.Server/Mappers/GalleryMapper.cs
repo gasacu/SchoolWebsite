@@ -1,5 +1,6 @@
 ﻿using SchoolSite.Server.DTOs;
 using SchoolSite.Server.Entities;
+using System.Linq;
 
 namespace SchoolSite.Server.Mappers
 {
@@ -14,8 +15,6 @@ namespace SchoolSite.Server.Mappers
                 Description = galleryDto.Description,
                 CreatedDate = galleryDto.CreatedDate,
                 UpdatedDate = galleryDto.UpdatedDate,
-                AdminId = galleryDto.AdminId,
-                Admin = galleryDto.Admin,
                 GalleryImages = galleryDto.GalleryImages
             };
         }
@@ -29,8 +28,6 @@ namespace SchoolSite.Server.Mappers
                 Description = gallery.Description,
                 CreatedDate = gallery.CreatedDate,
                 UpdatedDate = gallery.UpdatedDate,
-                AdminId = gallery.AdminId,
-                Admin = gallery.Admin,
                 GalleryImages = gallery.GalleryImages
             };
         }
