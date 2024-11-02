@@ -1,24 +1,53 @@
-<h2>Documents</h2>
-<a routerLink="/documents/create">Create</a>
-<table>
-    <thead>
-        <tr>
+<h2 class="text-center my-5">Documents</h2>
+
+<div class="d-flex flex-column">
+  <a
+    type="button"
+    class="btn btn-primary my-2 col-1"
+    routerLink="/documents/create"
+    >Create</a
+  >
+
+  <div class="card">
+    <div class="card-header">
+      <p class="card-title fs-5">Documents List</p>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead>
+          <tr>
             <th>Id</th>
             <th>Title</th>
             <th>Document URL</th>
             <th>Is Event?</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let document of documents">
-            <td>{{document.id}}</td>
-            <td>{{document.title}}</td>
-            <td>{{document.documentUrl}}</td>
-            <td>{{document.isEvent}}</td>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let document of documents">
+            <td>{{ document.id }}</td>
+            <td>{{ document.title }}</td>
+            <td>{{ document.documentUrl }}</td>
+            <td>{{ document.isEvent }}</td>
             <td>
-                <button (click)="deleteDocument(document.id)">Delete</button>
-                <button (click)="editDocument(document.id)">Edit</button>
+              <button
+                type="button"
+                class="btn btn-outline-warning btn-sm m-2"
+                (click)="editDocument(document.id)"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="deleteDocument(document.id)"
+              >
+                Delete
+              </button>
             </td>
-        </tr>
-    </tbody>
-</table>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

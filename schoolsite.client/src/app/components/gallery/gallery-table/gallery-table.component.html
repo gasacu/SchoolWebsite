@@ -1,26 +1,53 @@
-<h2>Galleries</h2>
-<a routerLink="/galleries/create">Create</a>
-<table>
-    <thead>
-        <tr>
+<h2 class="text-center my-5">Galleries</h2>
+
+<div class="d-flex flex-column">
+  <a
+    type="button"
+    class="btn btn-primary my-2 col-1"
+    routerLink="/galleries/create"
+    >Create</a
+  >
+
+  <div class="card">
+    <div class="card-header"><p class="card-title fs-5">Gallery List</p></div>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead>
+          <tr>
             <th>Id</th>
             <th>Title</th>
             <th>Description</th>
             <th>Created date</th>
             <th>Updated date</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let gallery of galleries">
-            <td>{{gallery.id}}</td>
-            <td>{{gallery.title}}</td>
-            <td>{{gallery.description}}</td>
-            <td>{{gallery.createdDate}}</td>
-            <td>{{gallery.updatedDate}}</td>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let gallery of galleries">
+            <td>{{ gallery.id }}</td>
+            <td>{{ gallery.title }}</td>
+            <td>{{ gallery.description }}</td>
+            <td>{{ gallery.createdDate }}</td>
+            <td>{{ gallery.updatedDate }}</td>
             <td>
-                <button (click)="deleteGallery(gallery.id)">Delete</button>
-                <button (click)="editGallery(gallery.id)">Edit</button>
+              <button
+                type="button"
+                class="btn btn-outline-warning btn-sm m-2"
+                (click)="editGallery(gallery.id)"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="deleteGallery(gallery.id)"
+              >
+                Delete
+              </button>
             </td>
-        </tr>
-    </tbody>
-</table>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

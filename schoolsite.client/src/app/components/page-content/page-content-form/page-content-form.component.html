@@ -1,31 +1,53 @@
-<h2>{{isEditing? 'Edit' : 'Create'}} Page Content</h2>
+<h2 class="text-center my-5">
+  {{ isEditing ? "Edit" : "Create" }} Page Content
+</h2>
 
 <div *ngIf="errorMessage != ''">
-    {{errorMessage}}
+  {{ errorMessage }}
 </div>
 
-<form (ngSubmit)="onSubmit()">
+<form (ngSubmit)="onSubmit()" class="border rounded p-5 w-75 mb-5 mx-auto">
+  <div class="mb-3">
+    <label class="form-label">Page Name</label>
+    <input
+      class="form-control"
+      type="text"
+      name="pageName"
+      [(ngModel)]="pageContent.pageName"
+    />
+  </div>
 
-    <div>
-        <label>Page Name</label>
-        <input type="text" name="pageName" [(ngModel)]="pageContent.pageName" />
-    </div>
+  <div class="mb-3">
+    <label class="form-label">Content</label>
+    <input
+      class="form-control"
+      type="text"
+      name="content"
+      [(ngModel)]="pageContent.content"
+    />
+  </div>
 
-    <div>
-        <label>Content</label>
-        <input type="text" name="content" [(ngModel)]="pageContent.content" />
-    </div>
+  <div class="mb-3">
+    <label class="form-label">Created date</label>
+    <input
+      class="form-control"
+      type="date"
+      name="createdDate"
+      [(ngModel)]="pageContent.createdDate"
+    />
+  </div>
 
-    <div>
-        <label>Created date</label>
-        <input type="date" name="createdDate" [(ngModel)]="pageContent.createdDate" />
-    </div>
+  <div class="mb-3">
+    <label class="form-label">Updated date</label>
+    <input
+      class="form-control"
+      type="date"
+      name="updatedDate"
+      [(ngModel)]="pageContent.updatedDate"
+    />
+  </div>
 
-    <div>
-        <label>Updated date</label>
-        <input type="date" name="updatedDate" [(ngModel)]="pageContent.updatedDate" />
-    </div>
-
-    <button type="submit">{{isEditing? 'Edit' : 'Create'}}</button>
+  <button class="btn btn-primary mt-3" type="submit">
+    {{ isEditing ? "Save" : "Create" }}
+  </button>
 </form>
-

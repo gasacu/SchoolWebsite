@@ -1,40 +1,70 @@
-<h2>{{ isEditing ? "Edit" : "Create" }} Gallery</h2>
+<h2 class="text-center my-5">{{ isEditing ? "Edit" : "Create" }} Gallery</h2>
 
 <div *ngIf="errorMessage != ''">
   {{ errorMessage }}
 </div>
 
-<form (ngSubmit)="onSubmit()">
-  <div>
-    <label>Title</label>
-    <input type="text" name="title" [(ngModel)]="gallery.title" />
+<form (ngSubmit)="onSubmit()" class="border rounded p-5 w-75 mb-5 mx-auto">
+  <div class="mb-3">
+    <label class="form-label">Title</label>
+    <input
+      class="form-control"
+      type="text"
+      name="title"
+      [(ngModel)]="gallery.title"
+    />
   </div>
 
-  <div>
-    <label>Description</label>
-    <input type="text" name="description" [(ngModel)]="gallery.description" />
+  <div class="mb-3">
+    <label class="form-label">Description</label>
+    <input
+      class="form-control"
+      type="text"
+      name="description"
+      [(ngModel)]="gallery.description"
+    />
   </div>
 
-  <div>
-    <label>Created date</label>
-    <input type="date" name="createdDate" [(ngModel)]="gallery.createdDate" />
+  <div class="mb-3">
+    <label class="form-label">Created date</label>
+    <input
+      class="form-control"
+      type="date"
+      name="createdDate"
+      [(ngModel)]="gallery.createdDate"
+    />
   </div>
 
-  <div>
-    <label>Updated date</label>
-    <input type="date" name="updatedDate" [(ngModel)]="gallery.updatedDate" />
+  <div class="mb-3">
+    <label class="form-label">Updated date</label>
+    <input
+      class="form-control"
+      type="date"
+      name="updatedDate"
+      [(ngModel)]="gallery.updatedDate"
+    />
   </div>
 
-  <button type="submit">{{ isEditing ? "Edit" : "Create" }}</button>
+  <button class="btn btn-primary mt-3 mx-5" type="submit">
+    {{ isEditing ? "Save" : "Create" }}
+  </button>
 
-  <a [routerLink]="['/gallery-images/create', gallery.id]">Add Image</a>
+  <a
+    class="btn btn-secondary mt-3"
+    [routerLink]="['/gallery-images/create', gallery.id]"
+    >Add Image</a
+  >
 
-  <div *ngIf="isEditing">
-    <h3>Gallery Images</h3>
-    <ul>
-      <li *ngFor="let image of gallery.galleryImages">
+  <div *ngIf="isEditing" class="border rounded p-5 w-75 mb-5 mx-auto my-5">
+    <h3 class="text-center my-4">Gallery Images</h3>
+    <ul class="list-group list-group-flush">
+      <li *ngFor="let image of gallery.galleryImages" class="list-group-item">
         <span>{{ image.imagePath }}</span>
-        <button type="button" (click)="deleteGalleryImage(image.id)">
+        <button
+          class="btn btn-danger btn-sm float-end"
+          type="button"
+          (click)="deleteGalleryImage(image.id)"
+        >
           Delete
         </button>
       </li>

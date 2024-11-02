@@ -1,27 +1,36 @@
-<h2>{{isEditing? 'Edit' : 'Create'}} Document</h2>
+<h2 class="text-center my-5">{{ isEditing ? "Edit" : "Create" }} Document</h2>
 
 <div *ngIf="errorMessage != ''">
-    {{errorMessage}}
+  {{ errorMessage }}
 </div>
 
-<form (ngSubmit)="onSubmit()">
+<form (ngSubmit)="onSubmit()" class="border rounded p-5 w-75 mb-5 mx-auto">
+  <div class="mb-3">
+    <label class="form-label">Title</label>
+    <input
+      class="form-control"
+      type="text"
+      name="title"
+      [(ngModel)]="document.title"
+    />
+  </div>
 
-    <div>
-        <label>Title</label>
-        <input type="text" name="title" [(ngModel)]="document.title" />
-    </div>
+  <div class="mb-3">
+    <label class="form-label">Document URL</label>
+    <input
+      class="form-control"
+      type="text"
+      name="documentUrl"
+      [(ngModel)]="document.documentUrl"
+    />
+  </div>
 
-    <div>
-        <label>Document URL</label>
-        <input type="text" name="documentUrl" [(ngModel)]="document.documentUrl" />
-    </div>
+  <div class="mb-3">
+    <label class="form-label">Is Event?</label>
+    <input type="checkbox" name="isEvent" [(ngModel)]="document.isEvent" />
+  </div>
 
-    <div>
-        <label>Is Event?</label>
-        <input type="checkbox" name="isEvent" [(ngModel)]="document.isEvent" />
-    </div>
-    
-
-    <button type="submit">{{isEditing? 'Edit' : 'Create'}}</button>
+  <button class="btn btn-primary mt-3" type="submit">
+    {{ isEditing ? "Save" : "Create" }}
+  </button>
 </form>
-

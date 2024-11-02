@@ -1,12 +1,39 @@
-<nav>
-    <a routerLink="/">Home</a>
-    <a routerLink="/admins">Admins</a>
-    <a routerLink="/documents">Documents</a>
-    <a routerLink="/galleries">Galleries</a>
-    <a routerLink="/page-contents">Page Contents</a>
-    <a routerLink="/team-members">Team Members</a>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">SchoolSite Management</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="/page-contents">Pagini</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="/documents">Documente</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="/galleries">Galerie</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="/team-members">Echipa</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="/admins">Utilizatori</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </nav>
 
-<router-outlet />
-
-
+<div class="container">
+  <router-outlet />
+</div>

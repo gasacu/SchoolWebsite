@@ -1,36 +1,63 @@
-<h2>{{isEditing? 'Edit' : 'Create'}} Team Member</h2>
+<h2 class="text-center my-5">
+  {{ isEditing ? "Edit" : "Create" }} Team Member
+</h2>
 
 <div *ngIf="errorMessage != ''">
-    {{errorMessage}}
+  {{ errorMessage }}
 </div>
 
-<form (ngSubmit)="onSubmit()">
+<form (ngSubmit)="onSubmit()" class="border rounded p-5 w-75 mb-5 mx-auto">
+  <div class="mb-3">
+    <label class="form-label">Name</label>
+    <input
+      class="form-control"
+      type="text"
+      name="name"
+      [(ngModel)]="teamMember.name"
+    />
+  </div>
 
-    <div>
-        <label>Name</label>
-        <input type="text" name="name" [(ngModel)]="teamMember.name" />
-    </div>
+  <div class="mb-3">
+    <label class="form-label">Role</label>
+    <input
+      class="form-control"
+      type="text"
+      name="role"
+      [(ngModel)]="teamMember.role"
+    />
+  </div>
 
-    <div>
-        <label>Role</label>
-        <input type="text" name="role" [(ngModel)]="teamMember.role" />
-    </div>
+  <div class="mb-3">
+    <label class="form-label">Department</label>
+    <input
+      class="form-control"
+      type="text"
+      name="department"
+      [(ngModel)]="teamMember.department"
+    />
+  </div>
 
-    <div>
-        <label>Department</label>
-        <input type="text" name="department" [(ngModel)]="teamMember.department" />
-    </div>
+  <div class="mb-3">
+    <label class="form-label">Bio</label>
+    <input
+      class="form-control"
+      type="text"
+      name="bio"
+      [(ngModel)]="teamMember.bio"
+    />
+  </div>
 
-    <div>
-        <label>Bio</label>
-        <input type="text" name="bio" [(ngModel)]="teamMember.bio" />
-    </div>
+  <div class="mb-3">
+    <label class="form-label">ImagePath</label>
+    <input
+      class="form-control"
+      type="text"
+      name="imagePath"
+      [(ngModel)]="teamMember.imagePath"
+    />
+  </div>
 
-    <div>
-        <label>ImagePath</label>
-        <input type="text" name="imagePath" [(ngModel)]="teamMember.imagePath" />
-    </div>
-    
-
-    <button type="submit">{{isEditing? 'Edit' : 'Create'}}</button>
+  <button class="btn btn-primary mt-3" type="submit">
+    {{ isEditing ? "Save" : "Create" }}
+  </button>
 </form>

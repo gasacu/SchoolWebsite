@@ -1,8 +1,21 @@
-<h2>Team Members</h2>
-<a routerLink="/team-members/create">Create</a>
-<table>
-    <thead>
-        <tr>
+<h2 class="text-center my-5">Team Members</h2>
+
+<div class="d-flex flex-column">
+  <a
+    type="button"
+    class="btn btn-primary my-2 col-1"
+    routerLink="/team-members/create"
+    >Create</a
+  >
+
+  <div class="card">
+    <div class="card-header">
+      <p class="card-title fs-5">Team Members List</p>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead>
+          <tr>
             <th>Id</th>
             <th>Name</th>
             <th>Role</th>
@@ -10,20 +23,35 @@
             <th>Bio</th>
             <th>Image</th>
             <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let teamMember of teamMembers">
-            <td>{{teamMember.id}}</td>
-            <td>{{teamMember.name}}</td>
-            <td>{{teamMember.role}}</td>
-            <td>{{teamMember.department}}</td>
-            <td>{{teamMember.bio}}</td>
-            <td>{{teamMember.imagePath}}</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let teamMember of teamMembers">
+            <td>{{ teamMember.id }}</td>
+            <td>{{ teamMember.name }}</td>
+            <td>{{ teamMember.role }}</td>
+            <td>{{ teamMember.department }}</td>
+            <td>{{ teamMember.bio }}</td>
+            <td>{{ teamMember.imagePath }}</td>
             <td>
-                <button (click)="deleteTeamMember(teamMember.id)">Delete</button>
-                <button (click)="editTeamMember(teamMember.id)">Edit</button>
+              <button
+                type="button"
+                class="btn btn-outline-warning btn-sm m-2"
+                (click)="editTeamMember(teamMember.id)"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="deleteTeamMember(teamMember.id)"
+              >
+                Delete
+              </button>
             </td>
-        </tr>
-    </tbody>
-</table>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

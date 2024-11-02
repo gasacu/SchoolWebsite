@@ -60,7 +60,7 @@ const routes: Routes = [
   { path: 'team-members/edit/:id', component: TeamMemberFormComponent },
 
   // Fallback for undefined routes
-  { path: '', redirectTo: '', pathMatch: 'full' },
+  { path: '', redirectTo: '/page-contents', pathMatch: 'full' },
 ];
 
 @NgModule({

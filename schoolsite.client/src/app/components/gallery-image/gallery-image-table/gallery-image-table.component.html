@@ -1,23 +1,49 @@
-<h2>Gallery Images for Galelry ID</h2>
-<a routerLink="/gallery-images/create">Create</a>
-<table>
-    <thead>
-        <tr>
+<h2 class="text-center my-5">Gallery Images for Galelry ID</h2>
+
+<div class="d-flex flex-column">
+  <a
+    type="button"
+    class="btn btn-primary my-2 col-1"
+    routerLink="/gallery-images/create"
+    >Create</a
+  >
+
+  <div class="card">
+    <div class="card-header"><p class="card-title fs-5">Gallery List</p></div>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead>
+          <tr>
             <th>Id</th>
             <th>Image</th>
             <th>Created date</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let galleryImage of galleryImages">
-            <td>{{galleryImage.id}}</td>
-            <td>{{galleryImage.imagePath}}</td>
-            <td>{{galleryImage.createdDate}}</td>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let galleryImage of galleryImages">
+            <td>{{ galleryImage.id }}</td>
+            <td>{{ galleryImage.imagePath }}</td>
+            <td>{{ galleryImage.createdDate }}</td>
             <td>
-                <button (click)="deleteGalleryImage(galleryImage.id)">Delete</button>
-                <button (click)="editGalleryImage(galleryImage.id)">Edit</button>
+              <button
+                type="button"
+                class="btn btn-outline-warning btn-sm m-2"
+                (click)="editGalleryImage(galleryImage.id)"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="deleteGalleryImage(galleryImage.id)"
+              >
+                Delete
+              </button>
             </td>
-        </tr>
-    </tbody>
-</table>
-
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
