@@ -1,28 +1,57 @@
 <h2 class="text-center my-5">{{ isEditing ? "Edit" : "Create" }} Document</h2>
 
-<div *ngIf="errorMessage != ''">
+<div class="text-danger text-center" *ngIf="errorMessage != ''">
   {{ errorMessage }}
 </div>
 
-<form (ngSubmit)="onSubmit()" class="border rounded p-5 w-75 mb-5 mx-auto">
+<form
+  *ngIf="errorMessage === ''"
+  (ngSubmit)="onSubmit()"
+  #documentForm="ngForm"
+  class="border rounded p-5 w-75 mb-5 mx-auto"
+>
   <div class="mb-3">
-    <label class="form-label">Title</label>
+    <label class="form-label">Title*</label>
     <input
+      required
+      maxlength="256"
+      #title="ngModel"
       class="form-control"
       type="text"
       name="title"
       [(ngModel)]="document.title"
     />
+    <div *ngIf="title.invalid && (title.touched || title.dirty)">
+      <div class="text-danger" *ngIf="title.errors?.['required']">
+        Title is required.
+      </div>
+      <div class="text-danger" *ngIf="title.errors?.['maxlength']">
+        Title cannot exceed 256 characters.
+      </div>
+    </div>
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Document URL</label>
+    <label class="form-label">Document URL*</label>
     <input
+      required
+      maxlength="256"
+      #documentUrl="ngModel"
       class="form-control"
       type="text"
       name="documentUrl"
       [(ngModel)]="document.documentUrl"
     />
+    <div
+      *ngIf="documentUrl.invalid && (documentUrl.touched || documentUrl.dirty)"
+    >
+      <div class="text-danger" *ngIf="documentUrl.errors?.['required']">
+        Document Url is required.
+      </div>
+      <div class="text-danger" *ngIf="documentUrl.errors?.['maxlength']">
+        Document Url cannot exceed 256 characters.
+      </div>
+    </div>
   </div>
 
   <div class="mb-3">
@@ -30,7 +59,11 @@
     <input type="checkbox" name="isEvent" [(ngModel)]="document.isEvent" />
   </div>
 
-  <button class="btn btn-primary mt-3" type="submit">
+  <button
+    class="btn btn-primary mt-3"
+    type="submit"
+    [disabled]="documentForm.invalid"
+  >
     {{ isEditing ? "Save" : "Create" }}
   </button>
 </form>
