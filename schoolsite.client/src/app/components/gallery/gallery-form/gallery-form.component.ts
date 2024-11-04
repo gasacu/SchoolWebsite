@@ -108,4 +108,8 @@ export class GalleryFormComponent implements OnInit {
       });
     }
   }
+
+  goBack() {
+    this.router.navigate(['/galleries']);
+  }
 }

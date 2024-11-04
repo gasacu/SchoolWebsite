@@ -6,70 +6,68 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-admin-form',
   templateUrl: './admin-form.component.html',
-  styleUrl: './admin-form.component.css'
+  styleUrl: './admin-form.component.css',
 })
 export class AdminFormComponent implements OnInit {
-
   admin: Admin = {
     id: 0,
     fullName: '',
     username: '',
-    passwordHash: ''
-  }
+    passwordHash: '',
+  };
 
   isEditing: boolean = false;
 
-  errorMessage : string = "";
+  errorMessage: string = '';
 
   constructor(
-    private adminService: AdminService, 
+    private adminService: AdminService,
     private router: Router,
     private route: ActivatedRoute
-    ){}
+  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((result) => {
       const id = result.get('id');
 
-      if(id) {
+      if (id) {
         // editing admin
         this.isEditing = true;
 
         this.adminService.getAdminById(Number(id)).subscribe({
-          next: (result) => this.admin = result,
-          error: (err) => this.errorMessage = `Error Occured (${err.status})`
-        })
+          next: (result) => (this.admin = result),
+          error: (err) => (this.errorMessage = `Error Occured (${err.status})`),
+        });
       }
-    });    
+    });
   }
 
-  onSubmit() : void {
-
-    if(this.isEditing) {
-      this.adminService.editAdmin(this.admin)
-      .subscribe({
+  onSubmit(): void {
+    if (this.isEditing) {
+      this.adminService.editAdmin(this.admin).subscribe({
         next: () => {
           this.router.navigate(['/admins']);
         },
         error: (err) => {
           console.error(err);
           this.errorMessage = `Error Occured during updating (${err.status})`;
-        }
+        },
       });
-
     } else {
       // creating
-      this.adminService.createAdmin(this.admin)
-      .subscribe({
+      this.adminService.createAdmin(this.admin).subscribe({
         next: () => {
           this.router.navigate(['/admins']);
         },
         error: (err) => {
           console.error(err);
           this.errorMessage = `Error Occured during creating (${err.status})`;
-        }
+        },
       });
     }
   }
 
+  goBack() {
+    this.router.navigate(['/admins']);
+  }
 }

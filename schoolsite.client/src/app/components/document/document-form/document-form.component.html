@@ -60,10 +60,14 @@
   </div>
 
   <button
-    class="btn btn-primary mt-3"
+    class="btn btn-primary mt-3 mx-5"
     type="submit"
     [disabled]="documentForm.invalid"
   >
     {{ isEditing ? "Save" : "Create" }}
+  </button>
+
+  <button class="btn btn-secondary mt-3" (click)="goBack()">
+    Back to List
   </button>
 </form>
