@@ -13,8 +13,11 @@
       <p class="card-title fs-5">Admins List</p>
     </div>
     <div class="card-body">
-      <table class="table table-hover">
-        <thead>
+      <table class="table table-hover caption-top">
+        <caption>
+          List of users
+        </caption>
+        <thead class="table-light">
           <tr>
             <th>Id</th>
             <th>Full Name</th>
@@ -23,7 +26,7 @@
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
           <tr *ngFor="let admin of admins">
             <td>{{ admin.id }}</td>
             <td>{{ admin.fullName }}</td>
@@ -40,7 +43,9 @@
               <button
                 type="button"
                 class="btn btn-danger btn-sm"
-                (click)="deleteAdmin(admin.id)"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                (click)="selectedAdminId = admin.id"
               >
                 Delete
               </button>
@@ -48,6 +53,46 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  #exampleModal
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Admin</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">Are you sure you want to delete this admin ?</div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="
+            selectedAdminId !== null ? deleteAdmin(selectedAdminId) : null
+          "
+        >
+          Delete
+        </button>
+      </div>
     </div>
   </div>
 </div>

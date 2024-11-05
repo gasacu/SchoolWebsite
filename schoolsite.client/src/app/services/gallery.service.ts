@@ -5,13 +5,12 @@ import { Observable } from 'rxjs';
 import { Gallery } from '../../entities/gallery';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GalleryService {
+  private apiUrl = `${environment.apiUrl}/gallery`;
 
-  private apiUrl = `${environment.apiUrl}/gallery`
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getGallerys(): Observable<Gallery[]> {
     return this.http.get<Gallery[]>(this.apiUrl);
@@ -32,5 +31,4 @@ export class GalleryService {
   editGallery(gallery: Gallery): Observable<Gallery> {
     return this.http.put<Gallery>(`${this.apiUrl}/${gallery.id}`, gallery);
   }
-
 }

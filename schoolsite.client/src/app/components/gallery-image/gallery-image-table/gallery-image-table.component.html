@@ -1,18 +1,14 @@
-<h2 class="text-center my-5">Gallery Images for Galelry ID</h2>
+<h2 class="text-center my-5">Gallery Images</h2>
 
 <div class="d-flex flex-column">
-  <a
-    type="button"
-    class="btn btn-primary my-2 col-1"
-    routerLink="/gallery-images/create"
-    >Create</a
-  >
-
   <div class="card">
     <div class="card-header"><p class="card-title fs-5">Gallery List</p></div>
     <div class="card-body">
-      <table class="table table-hover">
-        <thead>
+      <table class="table table-hover caption-top">
+        <caption>
+          List of gallery images
+        </caption>
+        <thead class="table-light">
           <tr>
             <th>Id</th>
             <th>Image</th>
@@ -20,7 +16,7 @@
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
           <tr *ngFor="let galleryImage of galleryImages">
             <td>{{ galleryImage.id }}</td>
             <td>{{ galleryImage.imagePath }}</td>
@@ -28,15 +24,10 @@
             <td>
               <button
                 type="button"
-                class="btn btn-outline-warning btn-sm m-2"
-                (click)="editGalleryImage(galleryImage.id)"
-              >
-                Edit
-              </button>
-              <button
-                type="button"
                 class="btn btn-danger btn-sm"
-                (click)="deleteGalleryImage(galleryImage.id)"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                (click)="selectedGalleryImageId = galleryImage.id"
               >
                 Delete
               </button>
@@ -44,6 +35,52 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  #exampleModal
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Delete Gallery Image
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this gallery image ?
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="
+            selectedGalleryImageId !== null
+              ? deleteGalleryImage(selectedGalleryImageId)
+              : null
+          "
+        >
+          Delete
+        </button>
+      </div>
     </div>
   </div>
 </div>

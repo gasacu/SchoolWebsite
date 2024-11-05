@@ -81,19 +81,5 @@
     Back to List
   </button>
 
-  <div *ngIf="isEditing" class="border rounded p-5 w-75 mb-5 mx-auto my-5">
-    <h3 class="text-center my-4">Gallery Images</h3>
-    <ul class="list-group list-group-flush">
-      <li *ngFor="let image of gallery.galleryImages" class="list-group-item">
-        <span>{{ image.imagePath }}</span>
-        <button
-          class="btn btn-danger btn-sm float-end"
-          type="button"
-          (click)="deleteGalleryImage(image.id)"
-        >
-          Delete
-        </button>
-      </li>
-    </ul>
-  </div>
+  <gallery-image-table></gallery-image-table>
 </form>

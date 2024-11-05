@@ -1,5 +1,6 @@
-import { HttpClientModule } from '@angular/common/http'; 
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -33,19 +34,20 @@ import { TeamMemberFormComponent } from './components/team-member/team-member-fo
     GalleryImageFormComponent,
     GalleryFormComponent,
     PageContentFormComponent,
-    TeamMemberFormComponent
+    TeamMemberFormComponent,
   ],
   imports: [
-    BrowserModule, 
+    BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
     CommonModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: AppComponent,  pathMatch: 'full' }
-    ])
+      { path: '', component: AppComponent, pathMatch: 'full' },
+    ]),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
