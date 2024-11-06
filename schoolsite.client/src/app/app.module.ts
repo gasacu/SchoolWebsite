@@ -1,6 +1,9 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -19,6 +22,7 @@ import { GalleryImageFormComponent } from './components/gallery-image/gallery-im
 import { GalleryFormComponent } from './components/gallery/gallery-form/gallery-form.component';
 import { PageContentFormComponent } from './components/page-content/page-content-form/page-content-form.component';
 import { TeamMemberFormComponent } from './components/team-member/team-member-form/team-member-form.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
   declarations: [
@@ -39,6 +43,9 @@ import { TeamMemberFormComponent } from './components/team-member/team-member-fo
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
     HttpClientModule,
     AppRoutingModule,
     CommonModule,
@@ -47,7 +54,7 @@ import { TeamMemberFormComponent } from './components/team-member/team-member-fo
       { path: '', component: AppComponent, pathMatch: 'full' },
     ]),
   ],
-  providers: [],
+  providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

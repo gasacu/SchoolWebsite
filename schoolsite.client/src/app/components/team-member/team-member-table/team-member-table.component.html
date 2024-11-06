@@ -8,12 +8,16 @@
     >Create</a
   >
 
-  <div class="card">
+  <!-- <div class="card">
     <div class="card-header">
       <p class="card-title fs-5">Team Members List</p>
     </div>
     <div class="card-body">
-      <table class="table table-hover caption-top">
+      <table
+        mat-table
+        [dataSource]="teamMembers"
+        class="table table-hover caption-top mat-elevetion-z8"
+      >
         <caption>
           List of team members
         </caption>
@@ -29,6 +33,7 @@
           </tr>
         </thead>
         <tbody class="table-group-divider">
+          <p *ngIf="!teamMembers.length">No team members available</p>
           <tr *ngFor="let teamMember of teamMembers">
             <td>{{ teamMember.id }}</td>
             <td>{{ teamMember.name }}</td>
@@ -58,8 +63,61 @@
         </tbody>
       </table>
     </div>
-  </div>
+  </div> -->
 </div>
+
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+    <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="role">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Role</th>
+    <td mat-cell *matCellDef="let element">{{ element.role }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="department">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Department</th>
+    <td mat-cell *matCellDef="let element">{{ element.department }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="bio">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Bio</th>
+    <td mat-cell *matCellDef="let element">{{ element.bio }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="imagePath">
+    <th mat-header-cell *matHeaderCellDef>Image</th>
+    <td mat-cell *matCellDef="let element">{{ element.imagePath }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-button (click)="editTeamMember(element.id)">Edit</button>
+      <button
+        mat-button
+        color="warn"
+        type="button"
+        class="btn btn-danger btn-sm"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+        (click)="selectedTeamMemberId = element.id"
+      >
+        Delete
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
 
 <!-- Modal -->
 <div

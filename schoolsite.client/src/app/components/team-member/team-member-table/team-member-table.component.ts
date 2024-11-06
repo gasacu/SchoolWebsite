@@ -1,7 +1,15 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { TeamMember } from '../../../../entities/teamMember';
 import { TeamMemberService } from '../../../services/team-member.service';
 import { Router } from '@angular/router';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 declare var bootstrap: any;
 
@@ -10,10 +18,24 @@ declare var bootstrap: any;
   templateUrl: './team-member-table.component.html',
   styleUrl: './team-member-table.component.css',
 })
-export class TeamMemberTableComponent {
+export class TeamMemberTableComponent implements OnInit, AfterViewInit {
   teamMembers: TeamMember[] = [];
   selectedTeamMemberId: number | null = null;
   modalInstance: any;
+
+  displayedColumns: string[] = [
+    'id',
+    'name',
+    'role',
+    'department',
+    'bio',
+    'imagePath',
+    'actions',
+  ];
+
+  dataSource: MatTableDataSource<TeamMember> = new MatTableDataSource();
+
+  @ViewChild(MatSort) sort!: MatSort;
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
 
@@ -23,17 +45,24 @@ export class TeamMemberTableComponent {
   ) {}
 
   ngOnInit() {
-    this.teamMemberService.getTeamMembers().subscribe((data: TeamMember[]) => {
-      this.teamMembers = data;
-      console.log(data);
-    });
+    this.fetchTeamMembers();
   }
 
   ngAfterViewInit() {
+    // Initialize sort functionality
+    this.dataSource.sort = this.sort;
     // Initialize the modal instance
     if (this.exampleModal) {
       this.modalInstance = new bootstrap.Modal(this.exampleModal.nativeElement);
     }
+  }
+
+  // Fetch the team members from the API
+  fetchTeamMembers(): void {
+    this.teamMemberService.getTeamMembers().subscribe((data) => {
+      this.teamMembers = data;
+      this.dataSource.data = this.teamMembers;
+    });
   }
 
   deleteTeamMember(id: number): void {
@@ -45,6 +74,8 @@ export class TeamMemberTableComponent {
     this.teamMemberService.deleteTeamMember(id).subscribe({
       next: () => {
         this.teamMembers = this.teamMembers.filter((tm) => tm.id != id);
+
+        this.dataSource.data = [...this.teamMembers];
 
         //Close the modal
         if (this.modalInstance) {

@@ -1,7 +1,15 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnInit,
+} from '@angular/core';
 import { Document } from '../../../../entities/document';
 import { DocumentService } from '../../../services/document.service';
 import { Router } from '@angular/router';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 declare var bootstrap: any;
 
@@ -10,10 +18,22 @@ declare var bootstrap: any;
   templateUrl: './document-table.component.html',
   styleUrl: './document-table.component.css',
 })
-export class DocumentTableComponent {
+export class DocumentTableComponent implements OnInit, AfterViewInit {
   documents: Document[] = [];
   selectedDocumentId: number | null = null;
   modalInstance: any;
+
+  displayedColumns: string[] = [
+    'id',
+    'title',
+    'documentUrl',
+    'isEvent',
+    'actions',
+  ];
+
+  dataSource: MatTableDataSource<Document> = new MatTableDataSource();
+
+  @ViewChild(MatSort) sort!: MatSort;
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
 
@@ -23,17 +43,24 @@ export class DocumentTableComponent {
   ) {}
 
   ngOnInit() {
-    this.documentService.getDocuments().subscribe((data: Document[]) => {
-      this.documents = data;
-      console.log(data);
-    });
+    this.fetchDocuments();
   }
 
   ngAfterViewInit() {
+    // Initialize sort functionality
+    this.dataSource.sort = this.sort;
     // Initialize the modal instance
     if (this.exampleModal) {
       this.modalInstance = new bootstrap.Modal(this.exampleModal.nativeElement);
     }
+  }
+
+  // Fetch documents from the API
+  fetchDocuments(): void {
+    this.documentService.getDocuments().subscribe((data: Document[]) => {
+      this.documents = data;
+      this.dataSource.data = this.documents;
+    });
   }
 
   deleteDocument(id: number): void {
@@ -45,6 +72,8 @@ export class DocumentTableComponent {
     this.documentService.deleteDocument(id).subscribe({
       next: () => {
         this.documents = this.documents.filter((d) => d.id != id);
+
+        this.dataSource.data = [...this.documents];
 
         //Close the modal
         if (this.modalInstance) {

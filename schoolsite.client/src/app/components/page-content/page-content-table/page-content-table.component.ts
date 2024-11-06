@@ -1,7 +1,15 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnInit,
+} from '@angular/core';
 import { PageContent } from '../../../../entities/pageContent';
 import { PageContentService } from '../../../services/page-content.service';
 import { Router } from '@angular/router';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 declare var bootstrap: any;
 
@@ -10,10 +18,23 @@ declare var bootstrap: any;
   templateUrl: './page-content-table.component.html',
   styleUrl: './page-content-table.component.css',
 })
-export class PageContentTableComponent {
+export class PageContentTableComponent implements OnInit, AfterViewInit {
   pageContents: PageContent[] = [];
   selectedPageContentId: number | null = null;
   modalInstance: any;
+
+  displayedColumns: string[] = [
+    'id',
+    'pageName',
+    'content',
+    'createdDate',
+    'updatedDate',
+    'actions',
+  ];
+
+  dataSource: MatTableDataSource<PageContent> = new MatTableDataSource();
+
+  @ViewChild(MatSort) sort!: MatSort;
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
 
@@ -23,19 +44,26 @@ export class PageContentTableComponent {
   ) {}
 
   ngOnInit() {
-    this.pageContentService
-      .getPageContents()
-      .subscribe((data: PageContent[]) => {
-        this.pageContents = data;
-        console.log(data);
-      });
+    this.fetchPageContents();
   }
 
   ngAfterViewInit() {
+    // Initialize sort functionality
+    this.dataSource.sort = this.sort;
     // Initialize the modal instance
     if (this.exampleModal) {
       this.modalInstance = new bootstrap.Modal(this.exampleModal.nativeElement);
     }
+  }
+
+  // Fetch the pages from the API
+  fetchPageContents(): void {
+    this.pageContentService
+      .getPageContents()
+      .subscribe((data: PageContent[]) => {
+        this.pageContents = data;
+        this.dataSource.data = this.pageContents;
+      });
   }
 
   deletePageContent(id: number): void {
@@ -47,6 +75,8 @@ export class PageContentTableComponent {
     this.pageContentService.deletePageContent(id).subscribe({
       next: () => {
         this.pageContents = this.pageContents.filter((pc) => pc.id != id);
+
+        this.dataSource.data = [...this.pageContents];
 
         //Close the modal
         if (this.modalInstance) {
