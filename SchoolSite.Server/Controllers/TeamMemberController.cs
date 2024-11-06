@@ -38,6 +38,11 @@ namespace SchoolSite.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<TeamMemberDto>> CreateTeamMember(TeamMemberDto teamMemberDto)
         {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest();
+            }
+
             await _teamMemberRepository.AddTeamMemberAsync(teamMemberDto);
             return CreatedAtAction(nameof(GetTeamMemberById), new { id = teamMemberDto.Id }, teamMemberDto);
         }
@@ -53,6 +58,11 @@ namespace SchoolSite.Server.Controllers
         public async Task<ActionResult<TeamMemberDto>> UpdateTeamMemberAsync(int id, TeamMemberDto teamMemberDto)
         {
             if (id != teamMemberDto.Id)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid == false)
             {
                 return BadRequest();
             }

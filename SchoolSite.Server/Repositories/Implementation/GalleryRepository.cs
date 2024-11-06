@@ -74,7 +74,7 @@ namespace SchoolSite.Server.Repositories.Implementation
                 galleryDb.Title = galleryDto.Title;
                 galleryDb.Description = galleryDto.Description;
                 galleryDb.CreatedDate = galleryDto.CreatedDate;
-                galleryDb.UpdatedDate = galleryDto.UpdatedDate;
+                galleryDb.UpdatedDate = DateTime.Now; // Update only during updates
                 galleryDb.GalleryImages = galleryDto.GalleryImages;
 
                 _context.Galleries.Update(galleryDb);

@@ -6,11 +6,11 @@ namespace SchoolSite.Server.DTOs
     {
         public int Id { get; set; }
 
-        [StringLength(64, ErrorMessage = "PageName cannot be longer than 64 characters.")]
-        [Required(ErrorMessage = "PageName is required.")]
+        [StringLength(64, ErrorMessage = "Page Name cannot be longer than 64 characters.")]
+        [Required(ErrorMessage = "Page Name is required.")]
         public string PageName { get; set; }
         public string Content { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
     }
 }

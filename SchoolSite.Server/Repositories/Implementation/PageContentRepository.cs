@@ -72,7 +72,7 @@ namespace SchoolSite.Server.Repositories.Implementation
                 pageContentDb.PageName = pageContentDto.PageName;
                 pageContentDb.Content = pageContentDto.Content;
                 pageContentDb.CreatedDate = pageContentDto.CreatedDate;
-                pageContentDb.UpdatedDate = pageContentDto.UpdatedDate;
+                pageContentDb.UpdatedDate = DateTime.Now;
 
                 _context.PageContents.Update(pageContentDb);
                 await _context.SaveChangesAsync();

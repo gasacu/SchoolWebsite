@@ -11,8 +11,8 @@ namespace SchoolSite.Server.DTOs
         [Required(ErrorMessage = "Title is required.")]
         public string Title { get; set; }
 
-        [StringLength(256, ErrorMessage = "DocumentUrl cannot be longer than 256 characters.")]
-        [Required(ErrorMessage = "DocumentUrl is required.")]
+        [StringLength(256, ErrorMessage = "Document Url cannot be longer than 256 characters.")]
+        [Required(ErrorMessage = "Document Url is required.")]
         public string DocumentUrl { get; set; }
 
         public bool IsEvent { get; set; }

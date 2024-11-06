@@ -42,6 +42,11 @@ namespace SchoolSite.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<AdminDto>> CreateAdmin(AdminDto adminDto)
         {
+            if(ModelState.IsValid == false)
+            {
+                return BadRequest();
+            }
+
             await _adminRepository.AddAdminAsync(adminDto);
             return CreatedAtAction(nameof(GetAdminById), new {id = adminDto.Id}, adminDto);
         }
@@ -57,6 +62,11 @@ namespace SchoolSite.Server.Controllers
         public async Task<ActionResult<AdminDto>> UpdateAdminAsync(int id, AdminDto adminDto)
         {
             if(id != adminDto.Id)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid == false)
             {
                 return BadRequest();
             }

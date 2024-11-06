@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SchoolSite.Server.DTOs;
 using SchoolSite.Server.Entities;
 
 namespace SchoolSite.Server.Context
@@ -72,6 +73,56 @@ namespace SchoolSite.Server.Context
                 .HasIndex(pc => pc.PageName)
                 .IsUnique();
 
+        }
+
+        // Database Context Override to automatically set the dates
+        public override int SaveChanges()
+        {
+            var timestamp = DateTime.Now;
+
+            // Handle Gallery entries (CreatedDate and UpdatedDate)
+            var galleryEntries = ChangeTracker.Entries<Gallery>()
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+
+            foreach (var entityEntry in galleryEntries)
+            {
+                if (entityEntry.State == EntityState.Added)
+                {
+                    entityEntry.Entity.CreatedDate = timestamp;
+                }
+                entityEntry.Entity.UpdatedDate = timestamp;
+            }
+
+            // Handle GalleryImage additions or deletions to update parent Gallery's UpdatedDate
+            var galleryImageEntries = ChangeTracker.Entries<GalleryImage>()
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Deleted);
+
+            foreach (var imageEntry in galleryImageEntries)
+            {
+                var galleryId = imageEntry.Entity.GalleryId;
+                var parentGallery = Set<Gallery>().Find(galleryId);
+
+                if (parentGallery != null)
+                {
+                    parentGallery.UpdatedDate = timestamp;
+                    Entry(parentGallery).State = EntityState.Modified;
+                }
+            }
+
+            // Handle PageContent entries (CreatedDate and UpdatedDate)
+            var pageContentEntries = ChangeTracker.Entries<PageContent>()
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+
+            foreach(var entityEntry in pageContentEntries)
+            {
+                if(entityEntry.State == EntityState.Added)
+                {
+                    entityEntry.Entity.CreatedDate = timestamp;
+                }
+                entityEntry.Entity.UpdatedDate = timestamp;
+            }
+
+            return base.SaveChanges();
         }
     }
 }

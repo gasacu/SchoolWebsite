@@ -20,6 +20,14 @@ namespace SchoolSite.Server.Repositories.Implementation
             var galleryImage = GalleryImageMapper.ToGalleryImage(galleryImageDto);
 
             await _context.AddAsync(galleryImage);
+
+            // Update the UpdatedDate of the associated Gallery
+            var gallery = await _context.Galleries.FindAsync(galleryImage.GalleryId);
+            if(gallery != null)
+            {
+                gallery.UpdatedDate = DateTime.Now;
+            }
+
             await _context.SaveChangesAsync();
         }
 
@@ -33,6 +41,14 @@ namespace SchoolSite.Server.Repositories.Implementation
             }
 
             _context.GalleryImages.Remove(galleryImageDb);
+
+            // Update the UpdatedDate of the associated Gallery
+            var gallery = await _context.Galleries.FindAsync(galleryImageDb.GalleryId);
+            if (gallery != null)
+            {
+                gallery.UpdatedDate = DateTime.Now;
+            }
+
             await _context.SaveChangesAsync();
         }
 

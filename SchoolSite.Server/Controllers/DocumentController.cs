@@ -39,6 +39,11 @@ namespace SchoolSite.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<DocumentDto>> CreateDocument(DocumentDto documentDto)
         {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest();
+            }
+
             await _documentRepository.AddDocumentAsync(documentDto);
             return CreatedAtAction(nameof(GetDocumentById), new { id = documentDto.Id }, documentDto);
         }
@@ -54,6 +59,11 @@ namespace SchoolSite.Server.Controllers
         public async Task<ActionResult<DocumentDto>> UpdateDocumentAsync(int id, DocumentDto documentDto)
         {
             if (id != documentDto.Id)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid == false)
             {
                 return BadRequest();
             }

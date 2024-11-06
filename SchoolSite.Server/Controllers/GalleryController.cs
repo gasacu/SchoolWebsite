@@ -39,6 +39,11 @@ namespace SchoolSite.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<GalleryDto>> CreateGallery(GalleryDto galleryDto)
         {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest();
+            }
+
             await _galleryRepository.AddGalleryAsync(galleryDto);
             return CreatedAtAction(nameof(GetGalleryById), new { id = galleryDto.Id }, galleryDto);
         }
@@ -54,6 +59,11 @@ namespace SchoolSite.Server.Controllers
         public async Task<ActionResult<GalleryDto>> UpdateGalleryAsync(int id, GalleryDto galleryDto)
         {
             if (id != galleryDto.Id)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid == false)
             {
                 return BadRequest();
             }

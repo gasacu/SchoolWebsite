@@ -76,6 +76,11 @@ namespace SchoolSite.Server.Controllers
                 return BadRequest();
             }
 
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest();
+            }
+
             await _galleryImageRepository.UpdateGalleryImageAsync(galleryImageDto);
             return CreatedAtAction(nameof(GetGalleryImageById), new { id = galleryImageDto.Id }, galleryImageDto);
         }

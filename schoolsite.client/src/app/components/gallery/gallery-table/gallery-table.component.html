@@ -30,8 +30,8 @@
             <td>{{ gallery.id }}</td>
             <td>{{ gallery.title }}</td>
             <td>{{ gallery.description }}</td>
-            <td>{{ gallery.createdDate }}</td>
-            <td>{{ gallery.updatedDate }}</td>
+            <td>{{ gallery.createdDate | date : "short" }}</td>
+            <td>{{ gallery.updatedDate | date : "short" }}</td>
             <td>
               <button
                 type="button"

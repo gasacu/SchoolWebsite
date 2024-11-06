@@ -30,8 +30,8 @@
             <td>{{ pageContent.id }}</td>
             <td>{{ pageContent.pageName }}</td>
             <td>{{ pageContent.content }}</td>
-            <td>{{ pageContent.createdDate }}</td>
-            <td>{{ pageContent.updatedDate }}</td>
+            <td>{{ pageContent.createdDate | date : "short" }}</td>
+            <td>{{ pageContent.updatedDate | date : "short" }}</td>
             <td>
               <button
                 type="button"

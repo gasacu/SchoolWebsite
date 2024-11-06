@@ -20,7 +20,7 @@
           <tr *ngFor="let galleryImage of galleryImages">
             <td>{{ galleryImage.id }}</td>
             <td>{{ galleryImage.imagePath }}</td>
-            <td>{{ galleryImage.createdDate }}</td>
+            <td>{{ galleryImage.createdDate | date : "short" }}</td>
             <td>
               <button
                 type="button"

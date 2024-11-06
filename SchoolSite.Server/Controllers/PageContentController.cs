@@ -39,6 +39,11 @@ namespace SchoolSite.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<PageContentDto>> CreatePageContent(PageContentDto pageContentDto)
         {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest();
+            }
+
             await _pageContentRepository.AddPageContentAsync(pageContentDto);
             return CreatedAtAction(nameof(GetPageContentById), new { id = pageContentDto.Id }, pageContentDto);
         }
@@ -54,6 +59,11 @@ namespace SchoolSite.Server.Controllers
         public async Task<ActionResult<PageContentDto>> UpdatePageContentAsync(int id, PageContentDto pageContentDto)
         {
             if (id != pageContentDto.Id)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid == false)
             {
                 return BadRequest();
             }
