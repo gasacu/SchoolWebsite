@@ -7,63 +7,13 @@
     routerLink="/team-members/create"
     >Create</a
   >
+</div>
 
-  <!-- <div class="card">
-    <div class="card-header">
-      <p class="card-title fs-5">Team Members List</p>
-    </div>
-    <div class="card-body">
-      <table
-        mat-table
-        [dataSource]="teamMembers"
-        class="table table-hover caption-top mat-elevetion-z8"
-      >
-        <caption>
-          List of team members
-        </caption>
-        <thead class="table-light">
-          <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Department</th>
-            <th>Bio</th>
-            <th>Image</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody class="table-group-divider">
-          <p *ngIf="!teamMembers.length">No team members available</p>
-          <tr *ngFor="let teamMember of teamMembers">
-            <td>{{ teamMember.id }}</td>
-            <td>{{ teamMember.name }}</td>
-            <td>{{ teamMember.role }}</td>
-            <td>{{ teamMember.department }}</td>
-            <td>{{ teamMember.bio }}</td>
-            <td>{{ teamMember.imagePath }}</td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-outline-warning btn-sm m-2"
-                (click)="editTeamMember(teamMember.id)"
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                class="btn btn-danger btn-sm"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-                (click)="selectedTeamMemberId = teamMember.id"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div> -->
+<div class="search-container">
+  <mat-form-field appearance="outline">
+    <mat-label>Search</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Search..." />
+  </mat-form-field>
 </div>
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">

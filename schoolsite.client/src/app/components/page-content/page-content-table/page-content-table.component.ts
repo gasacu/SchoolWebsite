@@ -66,6 +66,11 @@ export class PageContentTableComponent implements OnInit, AfterViewInit {
       });
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   deletePageContent(id: number): void {
     if (id === null) {
       console.error('No Id selected for deletion');

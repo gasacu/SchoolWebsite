@@ -65,6 +65,11 @@ export class TeamMemberTableComponent implements OnInit, AfterViewInit {
     });
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   deleteTeamMember(id: number): void {
     if (id === null) {
       console.error('No Id selected for deletion');

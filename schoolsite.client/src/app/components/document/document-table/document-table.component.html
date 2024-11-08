@@ -7,54 +7,13 @@
     routerLink="/documents/create"
     >Create</a
   >
+</div>
 
-  <!-- <div class="card">
-    <div class="card-header">
-      <p class="card-title fs-5">Documents List</p>
-    </div>
-    <div class="card-body">
-      <table class="table table-hover caption-top">
-        <caption>
-          List of documents
-        </caption>
-        <thead class="table-light">
-          <tr>
-            <th>Id</th>
-            <th>Title</th>
-            <th>Document URL</th>
-            <th>Is Event?</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody class="table-group-divider">
-          <tr *ngFor="let document of documents">
-            <td>{{ document.id }}</td>
-            <td>{{ document.title }}</td>
-            <td>{{ document.documentUrl }}</td>
-            <td>{{ document.isEvent }}</td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-outline-warning btn-sm m-2"
-                (click)="editDocument(document.id)"
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                class="btn btn-danger btn-sm"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-                (click)="selectedDocumentId = document.id"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div> -->
+<div class="search-container">
+  <mat-form-field appearance="outline">
+    <mat-label>Search</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Search..." />
+  </mat-form-field>
 </div>
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">

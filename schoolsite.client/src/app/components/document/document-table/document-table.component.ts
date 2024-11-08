@@ -63,6 +63,11 @@ export class DocumentTableComponent implements OnInit, AfterViewInit {
     });
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   deleteDocument(id: number): void {
     if (id === null) {
       console.error('No Id selected for deletion');

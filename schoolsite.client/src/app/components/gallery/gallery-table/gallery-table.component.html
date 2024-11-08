@@ -7,54 +7,13 @@
     routerLink="/galleries/create"
     >Create</a
   >
+</div>
 
-  <!-- <div class="card">
-    <div class="card-header"><p class="card-title fs-5">Gallery List</p></div>
-    <div class="card-body">
-      <table class="table table-hover caption-top">
-        <caption>
-          List of galleries
-        </caption>
-        <thead class="table-light">
-          <tr>
-            <th>Id</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Created date</th>
-            <th>Updated date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody class="table-group-divider">
-          <tr *ngFor="let gallery of galleries">
-            <td>{{ gallery.id }}</td>
-            <td>{{ gallery.title }}</td>
-            <td>{{ gallery.description }}</td>
-            <td>{{ gallery.createdDate | date : "short" }}</td>
-            <td>{{ gallery.updatedDate | date : "short" }}</td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-outline-warning btn-sm m-2"
-                (click)="editGallery(gallery.id)"
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                class="btn btn-danger btn-sm"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-                (click)="selectedGalleryId = gallery.id"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div> -->
+<div class="search-container">
+  <mat-form-field appearance="outline">
+    <mat-label>Search</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Search..." />
+  </mat-form-field>
 </div>
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
