@@ -22,22 +22,23 @@ export class TeamMemberTableComponent implements OnInit, AfterViewInit {
   teamMembers: TeamMember[] = [];
   selectedTeamMemberId: number | null = null;
   modalInstance: any;
+  viewImageModalInstance: any;
+  imageToView: string | null = null;
 
   displayedColumns: string[] = [
-    'id',
+    'imagePath',
     'name',
     'role',
     'department',
     'bio',
-    'imagePath',
     'actions',
   ];
 
   dataSource: MatTableDataSource<TeamMember> = new MatTableDataSource();
 
   @ViewChild(MatSort) sort!: MatSort;
-
   @ViewChild('exampleModal') exampleModal!: ElementRef;
+  @ViewChild('viewImageModal') viewImageModal!: ElementRef;
 
   constructor(
     private teamMemberService: TeamMemberService,
@@ -51,7 +52,15 @@ export class TeamMemberTableComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // Initialize sort functionality
     this.dataSource.sort = this.sort;
-    // Initialize the modal instance
+
+    // Initialize the image modal
+    if (this.viewImageModal) {
+      this.viewImageModalInstance = new bootstrap.Modal(
+        this.viewImageModal.nativeElement
+      );
+    }
+
+    // Initialize the delete modal instance
     if (this.exampleModal) {
       this.modalInstance = new bootstrap.Modal(this.exampleModal.nativeElement);
     }
@@ -70,12 +79,38 @@ export class TeamMemberTableComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  getImageUrl(imagePath: string | null): string {
+    if (imagePath) {
+      return `https://localhost:7047/${imagePath}`;
+    }
+    return 'https://localhost:7047/Uploads/images/user.png';
+  }
+
+  viewImage(imageUrl: string, event: Event): void {
+    if (imageUrl.includes('user.png')) {
+      return; // Do nothing if it's the base image
+    }
+
+    event.stopPropagation();
+    // Set the image source in the modal
+    const modalImage = document.getElementById(
+      'modalImage'
+    ) as HTMLImageElement;
+    if (modalImage) {
+      modalImage.src = imageUrl;
+    }
+
+    // Open the modal
+    if (this.viewImageModalInstance) {
+      this.viewImageModalInstance.show();
+    }
+  }
+
   deleteTeamMember(id: number): void {
     if (id === null) {
       console.error('No Id selected for deletion');
       return;
     }
-
     this.teamMemberService.deleteTeamMember(id).subscribe({
       next: () => {
         this.teamMembers = this.teamMembers.filter((tm) => tm.id != id);

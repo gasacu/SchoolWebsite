@@ -3,6 +3,8 @@ import { TeamMember } from '../../../../entities/teamMember';
 import { TeamMemberService } from '../../../services/team-member.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-team-member-form',
   templateUrl: './team-member-form.component.html',
@@ -18,9 +20,12 @@ export class TeamMemberFormComponent implements OnInit {
     imagePath: '',
   };
 
+  imgPath: string | null = null;
+  selectedFileName: string | null = null;
   isEditing: boolean = false;
-
   errorMessage: string = '';
+  imageToView: string | null = null;
+  modalInstance: any;
 
   constructor(
     private teamMemberService: TeamMemberService,
@@ -35,13 +40,57 @@ export class TeamMemberFormComponent implements OnInit {
       if (id) {
         // editing team member
         this.isEditing = true;
-
         this.teamMemberService.getTeamMemberById(Number(id)).subscribe({
-          next: (result) => (this.teamMember = result),
+          next: (result) => {
+            this.teamMember = result;
+            this.imgPath = this.teamMember.imagePath
+              ? `https://localhost:7047/${this.teamMember.imagePath}`
+              : 'https://localhost:7047/Uploads/images/user.png';
+
+            // Set selectedFileName to the existing image filename if it exists
+            this.selectedFileName = this.teamMember.imagePath
+              ? this.teamMember.imagePath.split('/').pop() || null
+              : null;
+          },
           error: (err) => (this.errorMessage = `Error Occured (${err.status})`),
         });
+      } else {
+        this.imgPath = 'https://localhost:7047/Uploads/images/user.png';
+        this.selectedFileName = null;
       }
     });
+  }
+
+  onImageSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.selectedFileName = file.name;
+      this.teamMemberService.uploadImage(file).subscribe({
+        next: (response) => {
+          this.imgPath = `https://localhost:7047/${response.path}`;
+          this.teamMember.imagePath = response.path;
+        },
+        error: (error) => {
+          console.error('Error uploading image:', error);
+          this.errorMessage = 'Failed to upload image.';
+        },
+      });
+    }
+  }
+
+  viewImage(imageUrl: string): void {
+    if (imageUrl.includes('user.png')) {
+      return; // Do nothing if it's the base image
+    }
+
+    this.imageToView = imageUrl;
+
+    // Show the modal with the image
+    const modal = document.getElementById('viewImageModal') as any;
+    if (modal) {
+      const bsModal = new bootstrap.Modal(modal);
+      bsModal.show();
+    }
   }
 
   onSubmit(): void {

@@ -17,9 +17,18 @@
 </div>
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-    <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+  <ng-container matColumnDef="imagePath">
+    <th mat-header-cell *matHeaderCellDef>Image</th>
+    <td mat-cell *matCellDef="let element">
+      <img
+        [src]="getImageUrl(element.imagePath)"
+        alt="Team Member Image"
+        class="img-thumbnail"
+        width="100"
+        (click)="viewImage(getImageUrl(element.imagePath), $event)"
+        style="cursor: pointer"
+      />
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="name">
@@ -40,11 +49,6 @@
   <ng-container matColumnDef="bio">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Bio</th>
     <td mat-cell *matCellDef="let element">{{ element.bio }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="imagePath">
-    <th mat-header-cell *matHeaderCellDef>Image</th>
-    <td mat-cell *matCellDef="let element">{{ element.imagePath }}</td>
   </ng-container>
 
   <ng-container matColumnDef="actions">
@@ -69,7 +73,39 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 
-<!-- Modal -->
+<!-- View Image Modal -->
+<div
+  class="modal fade"
+  id="viewImageModal"
+  #viewImageModal
+  tabindex="-1"
+  aria-labelledby="viewImageModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewImageModalLabel">View Image</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <img id="modalImage" src="" alt="Team Member Image" class="img-fluid" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Deleting Team Member -->
 <div
   class="modal fade"
   id="exampleModal"

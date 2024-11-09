@@ -5,13 +5,12 @@ import { Observable } from 'rxjs';
 import { TeamMember } from '../../entities/teamMember';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TeamMemberService {
+  private apiUrl = `${environment.apiUrl}/teamMember`;
 
-  private apiUrl = `${environment.apiUrl}/teamMember`
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getTeamMembers(): Observable<TeamMember[]> {
     return this.http.get<TeamMember[]>(this.apiUrl);
@@ -30,7 +29,16 @@ export class TeamMemberService {
   }
 
   editTeamMember(teamMember: TeamMember): Observable<TeamMember> {
-    return this.http.put<TeamMember>(`${this.apiUrl}/${teamMember.id}`, teamMember);
+    return this.http.put<TeamMember>(
+      `${this.apiUrl}/${teamMember.id}`,
+      teamMember
+    );
   }
 
+  uploadImage(file: File): Observable<{ path: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<{ path: string }>(`${this.apiUrl}/upload`, formData);
+  }
 }

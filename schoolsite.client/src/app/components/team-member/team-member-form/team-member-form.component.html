@@ -86,12 +86,33 @@
   </div>
 
   <div class="mb-3">
-    <label class="form-label">ImagePath</label>
+    <label class="form-label">Upload Image</label>
     <input
+      class="form-control d-none"
+      type="file"
+      id="imagePath"
+      (change)="onImageSelected($event)"
+      [disabled]="isEditing"
+    />
+    <label
       class="form-control"
-      type="text"
-      name="imagePath"
-      [(ngModel)]="teamMember.imagePath"
+      for="imagePath"
+      [ngClass]="{ 'text-muted': !selectedFileName }"
+    >
+      {{ selectedFileName || "Choose a file" }}
+    </label>
+  </div>
+
+  <!-- Image preview section -->
+  <div *ngIf="imgPath" class="my-3">
+    <img
+      [src]="imgPath"
+      alt="Team Member Image"
+      class="img-thumbnail"
+      width="200px"
+      height="200px"
+      (click)="viewImage(imgPath)"
+      style="cursor: pointer"
     />
   </div>
 
@@ -107,3 +128,34 @@
     Back to List
   </button>
 </form>
+
+<!-- Modal for Viewing Image -->
+<div
+  class="modal fade"
+  id="viewImageModal"
+  tabindex="-1"
+  aria-labelledby="viewImageModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewImageModalLabel">View Image</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <img
+          *ngIf="imageToView"
+          [src]="imageToView"
+          class="img-fluid"
+          alt="Team Member Image"
+        />
+      </div>
+    </div>
+  </div>
+</div>
