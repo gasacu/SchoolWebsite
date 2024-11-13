@@ -9,10 +9,12 @@ namespace SchoolSite.Server.Controllers
     public class TeamMemberController : ControllerBase
     {
         private readonly ITeamMemberRepository _teamMemberRepository;
+        private readonly IWebHostEnvironment _env;
 
-        public TeamMemberController(ITeamMemberRepository teamMemberRepository)
+        public TeamMemberController(ITeamMemberRepository teamMemberRepository, IWebHostEnvironment env)
         {
             _teamMemberRepository = teamMemberRepository;
+            _env = env;
         }
 
         [HttpGet]
@@ -50,7 +52,27 @@ namespace SchoolSite.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTeamMemberById(int id)
         {
+            var teamMember = await _teamMemberRepository.GetByIdAsync(id);
+            if ( teamMember == null )
+            {
+                return NotFound("Team member not found.");
+            }
+
+            var imagePath = teamMember.ImagePath;
+            if (!string.IsNullOrEmpty(imagePath))
+            {
+                var imageFullPath = Path.Combine(_env.ContentRootPath, imagePath);
+
+                imageFullPath = imageFullPath.Replace("\\", "/");
+                
+                if (System.IO.File.Exists(imageFullPath))
+                {
+                    System.IO.File.Delete(imageFullPath);
+                }
+            }
+
             await _teamMemberRepository.DeleteTeamMemberAsync(id);
+            
             return NoContent();
         }
 
@@ -72,5 +94,70 @@ namespace SchoolSite.Server.Controllers
             return CreatedAtAction(nameof(GetTeamMemberById), new { id = teamMemberDto.Id }, teamMemberDto);
 
         }
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("File is not selected");
+            }
+
+            // Define a dynamic path for the uploads folder
+            var projectRoot = Directory.GetCurrentDirectory();
+            var uploadsFolder = Path.Combine(projectRoot, "Uploads", "images");
+            Directory.CreateDirectory(uploadsFolder);
+
+            // Generate a unique filename
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            // Save the file to the server
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // Generate the relative path to store in the database
+            var relativePath = Path.Combine("Uploads", "images", fileName).Replace("\\", "/");
+
+            return Ok(new { path = relativePath });
+        }
+
+        [HttpGet("get-image/{imagePath}")]
+        public IActionResult GetImage(string imagePath)
+        {
+            // Path to the folder where images are stored
+            var imagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "images");
+
+            // Combine the base directory with the image path
+            var filePath = Path.Combine(imagesDirectory, imagePath);
+
+            // Check if the file exists
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound(); // Return 404 if image not found
+            }
+
+            // Open the image file and return it as a file response
+            var imageFile = System.IO.File.OpenRead(filePath);
+            return File(imageFile, "image/jpg"); // Adjust MIME type based on your image type (e.g., image/png)
+        }
+
+        [HttpDelete("delete-image/{imagePath}")]
+        public IActionResult DeleteImage(string imagePath)
+        {
+            var imagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "images");
+            var filePath = Path.Combine(imagesDirectory, imagePath);
+
+            if(System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+                return Ok(new { message = "Image deleted successfully" });
+            }
+
+            return NotFound("Image not found.");
+        }
+
     }
 }

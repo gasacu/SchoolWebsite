@@ -92,17 +92,27 @@
       type="file"
       id="imagePath"
       (change)="onImageSelected($event)"
-      [disabled]="isEditing"
     />
     <label
       class="form-control"
       for="imagePath"
-      [ngClass]="{ 'text-muted': !selectedFileName }"
+      [ngClass]="{ 'text-muted': selectedFileName }"
     >
       {{ selectedFileName || "Choose a file" }}
     </label>
   </div>
-
+  <div
+    *ngIf="imgPath === 'https://localhost:7047/Uploads/images/user.png'"
+    class="text-muted"
+  >
+    No image uploaded. Please choose a file to upload a new image.
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
   <!-- Image preview section -->
   <div *ngIf="imgPath" class="my-3">
     <img
@@ -114,6 +124,16 @@
       (click)="viewImage(imgPath)"
       style="cursor: pointer"
     />
+    <button
+      *ngIf="imgPath != 'https://localhost:7047/Uploads/images/user.png'"
+      mat-button
+      color="warn"
+      type="button"
+      class="btn btn-danger btn-sm mt-2"
+      (click)="openDeleteImageModal()"
+    >
+      Delete Image
+    </button>
   </div>
 
   <button
@@ -155,6 +175,42 @@
           class="img-fluid"
           alt="Team Member Image"
         />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Deleting Image -->
+<div
+  class="modal fade"
+  id="deleteImageModal"
+  #deleteImageModal
+  tabindex="-1"
+  aria-labelledby="deleteImageModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="deleteImageModalLabel">
+          Delete Image
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">Are you sure you want to delete the image ?</div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteImage()">
+          Delete
+        </button>
       </div>
     </div>
   </div>

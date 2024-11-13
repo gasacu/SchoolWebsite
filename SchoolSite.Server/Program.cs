@@ -3,26 +3,25 @@ using SchoolSite.Server.Context;
 using Microsoft.OpenApi.Models;
 using SchoolSite.Server.Repositories.Interfaces;
 using SchoolSite.Server.Repositories.Implementation;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 // Context
 builder.Services.AddDbContext<SchoolDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")));
 
-// CORS
+// Add CORS policy
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("MyCorsPolicy", builder =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        builder.WithOrigins("http://localhost:4200")
+        policy.WithOrigins("http://localhost:4200")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials();
     });
-    
 });
 
 // Add the repository to the DI (dependency injection)
@@ -41,10 +40,16 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
+app.UseCors("AllowFrontend");
+//app.UseDefaultFiles();
 app.UseStaticFiles();
 
-app.UseCors("MyCorsPolicy");
+// Allow direct access to images
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
+    RequestPath = "/Uploads"  
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

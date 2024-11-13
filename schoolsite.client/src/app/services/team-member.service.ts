@@ -41,4 +41,8 @@ export class TeamMemberService {
 
     return this.http.post<{ path: string }>(`${this.apiUrl}/upload`, formData);
   }
+
+  deleteImage(imagePath: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/delete-image/${imagePath}`);
+  }
 }

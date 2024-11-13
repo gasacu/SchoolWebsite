@@ -4,12 +4,16 @@ import {
   ElementRef,
   ViewChild,
   AfterViewInit,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { TeamMember } from '../../../../entities/teamMember';
 import { TeamMemberService } from '../../../services/team-member.service';
+import { TeamMemberSharedService } from '../../../services/team-member-shared.service';
 import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { finalize } from 'rxjs';
 
 declare var bootstrap: any;
 
@@ -17,6 +21,7 @@ declare var bootstrap: any;
   selector: 'team-member-table',
   templateUrl: './team-member-table.component.html',
   styleUrl: './team-member-table.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TeamMemberTableComponent implements OnInit, AfterViewInit {
   teamMembers: TeamMember[] = [];
@@ -42,10 +47,16 @@ export class TeamMemberTableComponent implements OnInit, AfterViewInit {
 
   constructor(
     private teamMemberService: TeamMemberService,
-    private router: Router
+    private sharedService: TeamMemberSharedService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
+    this.sharedService.refreshNeeded$.subscribe(() => {
+      this.fetchTeamMembers();
+    });
+
     this.fetchTeamMembers();
   }
 
@@ -69,8 +80,11 @@ export class TeamMemberTableComponent implements OnInit, AfterViewInit {
   // Fetch the team members from the API
   fetchTeamMembers(): void {
     this.teamMemberService.getTeamMembers().subscribe((data) => {
-      this.teamMembers = data;
-      this.dataSource.data = this.teamMembers;
+      setTimeout(() => {
+        this.teamMembers = data;
+        this.dataSource.data = this.teamMembers;
+        this.cdr.markForCheck();
+      });
     });
   }
 
@@ -80,8 +94,8 @@ export class TeamMemberTableComponent implements OnInit, AfterViewInit {
   }
 
   getImageUrl(imagePath: string | null): string {
-    if (imagePath) {
-      return `https://localhost:7047/${imagePath}`;
+    if (imagePath && imagePath.trim()) {
+      return `https://localhost:7047/${imagePath}?timestamp=${new Date().getTime()}`;
     }
     return 'https://localhost:7047/Uploads/images/user.png';
   }
@@ -111,21 +125,27 @@ export class TeamMemberTableComponent implements OnInit, AfterViewInit {
       console.error('No Id selected for deletion');
       return;
     }
-    this.teamMemberService.deleteTeamMember(id).subscribe({
-      next: () => {
-        this.teamMembers = this.teamMembers.filter((tm) => tm.id != id);
 
-        this.dataSource.data = [...this.teamMembers];
-
-        //Close the modal
-        if (this.modalInstance) {
-          this.modalInstance.hide();
-        }
-      },
-      error: (err) => {
-        console.error('Error for deleting team member', err);
-      },
-    });
+    this.teamMemberService
+      .deleteTeamMember(id)
+      .pipe(
+        finalize(() => {
+          //Close the modal
+          if (this.modalInstance) {
+            this.modalInstance.hide();
+          }
+          this.fetchTeamMembers();
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.teamMembers = this.teamMembers.filter((tm) => tm.id != id);
+          this.dataSource.data = [...this.teamMembers];
+        },
+        error: (err) => {
+          console.error('Error for deleting team member', err);
+        },
+      });
   }
 
   editTeamMember(id: number): void {
