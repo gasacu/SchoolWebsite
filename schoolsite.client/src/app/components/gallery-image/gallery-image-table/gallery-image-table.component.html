@@ -7,42 +7,36 @@
   Add Image
 </button>
 
-<div class="d-flex flex-column">
-  <div class="card">
-    <div class="card-header"><p class="card-title fs-5">Gallery List</p></div>
-    <div class="card-body">
-      <table class="table table-hover caption-top">
-        <caption>
-          List of gallery images
-        </caption>
-        <thead class="table-light">
-          <tr>
-            <th>Id</th>
-            <th>Image</th>
-            <th>Created date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody class="table-group-divider">
-          <tr *ngFor="let galleryImage of galleryImages">
-            <td>{{ galleryImage.id }}</td>
-            <td>{{ galleryImage.imagePath }}</td>
-            <td>{{ galleryImage.createdDate | date : "short" }}</td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-danger btn-sm"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-                (click)="selectedGalleryImageId = galleryImage.id"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<div class="card">
+  <div class="card-header"><p class="card-title fs-5">Gallery List</p></div>
+  <caption>
+    List of gallery images
+  </caption>
+  <div class="">
+    <mat-grid-list
+      class="m-3"
+      *ngFor="let galleryImage of galleryImages"
+      cols="3"
+      rowHeight="2:1"
+    >
+      <mat-grid-tile colspan="1">
+        <mat-grid-tile-header>{{
+          galleryImage.createdDate | date : "short"
+        }}</mat-grid-tile-header>
+        <mat-grid-tile-footer>
+          <button
+            type="button"
+            class="btn btn-danger btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            (click)="selectedGalleryImageId = galleryImage.id"
+          >
+            Delete
+          </button>
+        </mat-grid-tile-footer>
+        <span>{{ galleryImage.imagePath }}</span>
+      </mat-grid-tile>
+    </mat-grid-list>
   </div>
 </div>
 

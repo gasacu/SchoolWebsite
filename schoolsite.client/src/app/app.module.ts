@@ -10,6 +10,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -58,6 +59,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     MatSortModule,
     MatSelectModule,
     MatOptionModule,
+    MatGridListModule,
     HttpClientModule,
     AppRoutingModule,
     CommonModule,
