@@ -10,6 +10,7 @@ import { PageContentService } from '../../../services/page-content.service';
 import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 declare var bootstrap: any;
 
@@ -35,7 +36,7 @@ export class PageContentTableComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<PageContent> = new MatTableDataSource();
 
   @ViewChild(MatSort) sort!: MatSort;
-
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('exampleModal') exampleModal!: ElementRef;
 
   constructor(
@@ -54,6 +55,8 @@ export class PageContentTableComponent implements OnInit, AfterViewInit {
     if (this.exampleModal) {
       this.modalInstance = new bootstrap.Modal(this.exampleModal.nativeElement);
     }
+
+    this.dataSource.paginator = this.paginator;
   }
 
   // Fetch the pages from the API

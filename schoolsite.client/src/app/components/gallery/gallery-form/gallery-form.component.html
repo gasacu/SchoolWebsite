@@ -32,13 +32,26 @@
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Description</label>
+    <label class="form-label">Description*</label>
     <input
+      required
+      maxlength="256"
+      #description="ngModel"
       class="form-control"
       type="text"
       name="description"
       [(ngModel)]="gallery.description"
     />
+    <div
+      *ngIf="description.invalid && (description.touched || description.dirty)"
+    >
+      <div class="text-danger" *ngIf="description.errors?.['required']">
+        Description is required.
+      </div>
+      <div class="text-danger" *ngIf="description.errors?.['maxlength']">
+        Description cannot exceed 256 characters.
+      </div>
+    </div>
   </div>
 
   <!-- <div class="mb-3">

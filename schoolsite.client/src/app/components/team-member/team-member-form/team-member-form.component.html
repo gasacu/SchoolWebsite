@@ -102,7 +102,9 @@
     </label>
   </div>
   <div
-    *ngIf="imgPath === 'https://localhost:7047/Uploads/images/user.png'"
+    *ngIf="
+      imgPath === 'https://localhost:7047/Uploads/images/team-members/user.png'
+    "
     class="text-muted"
   >
     No image uploaded. Please choose a file to upload a new image.
@@ -125,7 +127,9 @@
       style="cursor: pointer"
     />
     <button
-      *ngIf="imgPath != 'https://localhost:7047/Uploads/images/user.png'"
+      *ngIf="
+        imgPath != 'https://localhost:7047/Uploads/images/team-members/user.png'
+      "
       mat-button
       color="warn"
       type="button"

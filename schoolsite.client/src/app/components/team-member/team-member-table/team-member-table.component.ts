@@ -13,6 +13,7 @@ import { TeamMemberSharedService } from '../../../services/team-member-shared.se
 import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { finalize } from 'rxjs';
 
 declare var bootstrap: any;
@@ -42,6 +43,7 @@ export class TeamMemberTableComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<TeamMember> = new MatTableDataSource();
 
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('exampleModal') exampleModal!: ElementRef;
   @ViewChild('viewImageModal') viewImageModal!: ElementRef;
 
@@ -75,6 +77,8 @@ export class TeamMemberTableComponent implements OnInit, AfterViewInit {
     if (this.exampleModal) {
       this.modalInstance = new bootstrap.Modal(this.exampleModal.nativeElement);
     }
+
+    this.dataSource.paginator = this.paginator;
   }
 
   // Fetch the team members from the API
@@ -97,7 +101,7 @@ export class TeamMemberTableComponent implements OnInit, AfterViewInit {
     if (imagePath && imagePath.trim()) {
       return `https://localhost:7047/${imagePath}?timestamp=${new Date().getTime()}`;
     }
-    return 'https://localhost:7047/Uploads/images/user.png';
+    return 'https://localhost:7047/Uploads/images/team-members/user.png';
   }
 
   viewImage(imageUrl: string, event: Event): void {

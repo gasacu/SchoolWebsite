@@ -58,7 +58,7 @@ export class TeamMemberFormComponent implements OnInit, AfterViewInit {
             this.teamMember = result;
             this.imgPath = this.teamMember.imagePath
               ? `https://localhost:7047/${this.teamMember.imagePath}`
-              : 'https://localhost:7047/Uploads/images/user.png';
+              : 'https://localhost:7047/Uploads/images/team-members/user.png';
 
             // Set selectedFileName to the existing image filename if it exists
             this.selectedFileName = this.teamMember.imagePath
@@ -68,7 +68,8 @@ export class TeamMemberFormComponent implements OnInit, AfterViewInit {
           error: (err) => (this.errorMessage = `Error Occured (${err.status})`),
         });
       } else {
-        this.imgPath = 'https://localhost:7047/Uploads/images/user.png';
+        this.imgPath =
+          'https://localhost:7047/Uploads/images/team-members/user.png';
         this.selectedFileName = null;
       }
     });
@@ -122,7 +123,8 @@ export class TeamMemberFormComponent implements OnInit, AfterViewInit {
   deleteImage(): void {
     // reset the preview and selected file
     if (this.selectedFile) {
-      this.imgPath = 'https://localhost:7047/Uploads/images/user.png';
+      this.imgPath =
+        'https://localhost:7047/Uploads/images/team-members/user.png';
       this.selectedFile = null;
       this.selectedFileName = null;
 
@@ -137,7 +139,8 @@ export class TeamMemberFormComponent implements OnInit, AfterViewInit {
       // Delete the image from the server
       this.teamMemberService.deleteImage(imagePath).subscribe({
         next: () => {
-          this.imgPath = 'https://localhost:7047/Uploads/images/user.png';
+          this.imgPath =
+            'https://localhost:7047/Uploads/images/team-members/user.png';
           this.teamMember.imagePath = '';
           this.selectedFileName = null;
           this.saveTeamMember();
@@ -187,7 +190,7 @@ export class TeamMemberFormComponent implements OnInit, AfterViewInit {
     if (
       !this.teamMember.imagePath ||
       this.teamMember.imagePath ===
-        'https://localhost:7047/Uploads/images/user.png'
+        'https://localhost:7047/Uploads/images/team-members/user.png'
     ) {
       this.teamMember.imagePath = ''; // Remove any image reference if it's the default image
     }

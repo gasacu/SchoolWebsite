@@ -10,6 +10,7 @@ import { AdminService } from '../../../services/admin.service';
 import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 declare var bootstrap: any;
 
@@ -24,7 +25,6 @@ export class AdminTableComponent implements OnInit, AfterViewInit {
   modalInstance: any;
 
   displayedColumns: string[] = [
-    'id',
     'fullName',
     'username',
     'passwordHash',
@@ -34,7 +34,7 @@ export class AdminTableComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<Admin> = new MatTableDataSource();
 
   @ViewChild(MatSort) sort!: MatSort;
-
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('exampleModal') exampleModal!: ElementRef;
 
   constructor(private adminService: AdminService, private router: Router) {}
@@ -50,6 +50,8 @@ export class AdminTableComponent implements OnInit, AfterViewInit {
     if (this.exampleModal) {
       this.modalInstance = new bootstrap.Modal(this.exampleModal.nativeElement);
     }
+
+    this.dataSource.paginator = this.paginator;
   }
 
   // Fetch the admins from the API

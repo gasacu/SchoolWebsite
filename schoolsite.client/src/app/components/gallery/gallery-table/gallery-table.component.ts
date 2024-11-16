@@ -10,6 +10,7 @@ import { GalleryService } from '../../../services/gallery.service';
 import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 declare var bootstrap: any;
 
@@ -24,7 +25,6 @@ export class GalleryTableComponent implements OnInit, AfterViewInit {
   modalInstance: any;
 
   displayedColumns: string[] = [
-    'id',
     'title',
     'description',
     'createdDate',
@@ -33,6 +33,8 @@ export class GalleryTableComponent implements OnInit, AfterViewInit {
   ];
 
   dataSource: MatTableDataSource<Gallery> = new MatTableDataSource();
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -51,6 +53,8 @@ export class GalleryTableComponent implements OnInit, AfterViewInit {
     if (this.exampleModal) {
       this.modalInstance = new bootstrap.Modal(this.exampleModal.nativeElement);
     }
+
+    this.dataSource.paginator = this.paginator;
   }
 
   // Fetch the galleries from the API
