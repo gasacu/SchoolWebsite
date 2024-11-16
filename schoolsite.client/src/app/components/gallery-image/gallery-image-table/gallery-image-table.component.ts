@@ -1,6 +1,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { GalleryImage } from '../../../../entities/galleryImage';
 import { GalleryImageService } from '../../../services/gallery-image.service';
+import { Gallery } from '../../../../entities/gallery';
+import { GalleryService } from '../../../services/gallery.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 declare var bootstrap: any;
@@ -12,6 +14,7 @@ declare var bootstrap: any;
 })
 export class GalleryImageTableComponent {
   galleryImages: GalleryImage[] = [];
+  gallery: Gallery[] = [];
   galleryId!: number;
   selectedGalleryImageId: number | null = null;
   modalInstance: any;
@@ -20,6 +23,7 @@ export class GalleryImageTableComponent {
 
   constructor(
     private galleryImageService: GalleryImageService,
+    private galleryService: GalleryService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -42,9 +46,9 @@ export class GalleryImageTableComponent {
   }
 
   loadGalleryImages(galleryId: number): void {
-    this.galleryImageService.getGalleryImagesByGalleryId(galleryId).subscribe({
-      next: (data: GalleryImage[]) => {
-        this.galleryImages = data;
+    this.galleryService.getGalleryImagesByGalleryId(galleryId).subscribe({
+      next: (images) => {
+        this.galleryImages = images;
       },
       error: (err) => {
         console.error('Error loading gallery images', err);
@@ -73,7 +77,7 @@ export class GalleryImageTableComponent {
     });
   }
 
-  editGalleryImage(id: number): void {
-    this.router.navigate(['/gallery-images/edit', id]);
+  goBack() {
+    this.router.navigate(['/galleries']);
   }
 }

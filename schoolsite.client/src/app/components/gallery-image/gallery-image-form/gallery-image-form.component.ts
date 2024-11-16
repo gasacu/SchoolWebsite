@@ -62,7 +62,11 @@ export class GalleryImageFormComponent implements OnInit {
     if (this.isEditing) {
       this.galleryImageService.editGalleryImage(this.galleryImage).subscribe({
         next: () => {
-          this.router.navigate(['/galleries', this.galleryImage.galleryId]);
+          this.router.navigate([
+            '/galleries',
+            this.galleryImage.galleryId,
+            'images',
+          ]);
         },
         error: (err) => {
           console.error(err);
@@ -74,8 +78,9 @@ export class GalleryImageFormComponent implements OnInit {
       this.galleryImageService.createGalleryImage(this.galleryImage).subscribe({
         next: () => {
           this.router.navigate([
-            '/galleries/edit',
+            '/galleries',
             this.galleryImage.galleryId,
+            'images',
           ]);
         },
         error: (err) => {
@@ -87,6 +92,6 @@ export class GalleryImageFormComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/galleries/edit', this.galleryImage.galleryId]);
+    this.router.navigate(['/galleries', this.galleryImage.galleryId, 'images']);
   }
 }

@@ -22,9 +22,13 @@ declare var bootstrap: any;
 export class GalleryTableComponent implements OnInit, AfterViewInit {
   galleries: Gallery[] = [];
   selectedGalleryId: number | null = null;
+  filteredGalleries: Gallery[] = [];
+  availableYears: string[] = [];
+  selectedYear: string = 'All';
   modalInstance: any;
 
   displayedColumns: string[] = [
+    'year',
     'title',
     'description',
     'createdDate',
@@ -61,6 +65,11 @@ export class GalleryTableComponent implements OnInit, AfterViewInit {
   fetchGalleries(): void {
     this.galleryService.getGallerys().subscribe((data: Gallery[]) => {
       this.galleries = data;
+
+      this.availableYears = Array.from(
+        new Set(this.galleries.map((g) => g.year))
+      );
+
       this.dataSource.data = this.galleries;
     });
   }
@@ -70,7 +79,38 @@ export class GalleryTableComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  applyYearFilter(selectedYear: string): void {
+    if (selectedYear) {
+      this.dataSource.data = this.galleries.filter(
+        (g) => g.year === selectedYear
+      );
+    } else {
+      this.dataSource.data = this.galleries; // Reset to all data if no year is selected
+    }
+  }
+
+  filterByYear(): void {
+    if (this.selectedYear === 'All') {
+      this.filteredGalleries = [...this.galleries];
+    } else {
+      this.filteredGalleries = this.galleries.filter(
+        (gallery) => gallery.year === this.selectedYear
+      );
+    }
+    this.dataSource.data = this.filteredGalleries;
+  }
+
+  navigateToGalleryImages(galleryId: number, event: MouseEvent): void {
+    if ((event.target as HTMLElement).classList.contains('btn-danger')) {
+      event.stopPropagation();
+      return;
+    }
+
+    this.router.navigate(['/galleries', galleryId, 'images']);
+  }
+
   deleteGallery(id: number): void {
+    console.log('Gallery ID to delete: ', id);
     if (id === null) {
       console.error('No Id selected for deletion');
       return;
@@ -79,7 +119,7 @@ export class GalleryTableComponent implements OnInit, AfterViewInit {
     this.galleryService.deleteGallery(id).subscribe({
       next: () => {
         this.galleries = this.galleries.filter((g) => g.id != id);
-
+        this.filterByYear();
         this.dataSource.data = [...this.galleries];
 
         //Close the modal

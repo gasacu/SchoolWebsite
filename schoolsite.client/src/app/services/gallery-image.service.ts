@@ -12,10 +12,6 @@ export class GalleryImageService {
 
   constructor(private http: HttpClient) {}
 
-  getGalleryImagesByGalleryId(galleryId: number): Observable<GalleryImage[]> {
-    return this.http.get<GalleryImage[]>(`${this.apiUrl}/${galleryId}/images`);
-  }
-
   getGalleryImageById(id: number): Observable<GalleryImage> {
     return this.http.get<GalleryImage>(`${this.apiUrl}/${id}`);
   }

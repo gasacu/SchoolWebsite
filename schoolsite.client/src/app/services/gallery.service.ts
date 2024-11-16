@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { Gallery } from '../../entities/gallery';
+import { GalleryImage } from '../../entities/galleryImage';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,10 @@ export class GalleryService {
 
   getGalleryById(id: number): Observable<Gallery> {
     return this.http.get<Gallery>(`${this.apiUrl}/${id}`);
+  }
+
+  getGalleryImagesByGalleryId(galleryId: number): Observable<GalleryImage[]> {
+    return this.http.get<GalleryImage[]>(`${this.apiUrl}/${galleryId}/images`);
   }
 
   createGallery(gallery: Gallery): Observable<Gallery> {

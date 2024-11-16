@@ -11,6 +11,26 @@
   class="border rounded p-5 w-75 mb-5 mx-auto"
 >
   <div class="mb-3">
+    <label class="form-label">Year*</label>
+    <input
+      required
+      maxlength="256"
+      #year="ngModel"
+      class="form-control"
+      type="text"
+      name="year"
+      [(ngModel)]="gallery.year"
+    />
+    <div *ngIf="year.invalid && (year.touched || year.dirty)">
+      <div class="text-danger" *ngIf="year.errors?.['required']">
+        Year is required.
+      </div>
+      <div class="text-danger" *ngIf="year.errors?.['maxlength']">
+        Year cannot exceed 256 characters.
+      </div>
+    </div>
+  </div>
+  <div class="mb-3">
     <label class="form-label">Title*</label>
     <input
       required
@@ -30,7 +50,6 @@
       </div>
     </div>
   </div>
-
   <div class="mb-3">
     <label class="form-label">Description*</label>
     <input
@@ -54,26 +73,6 @@
     </div>
   </div>
 
-  <!-- <div class="mb-3">
-    <label class="form-label">Created date</label>
-    <input
-      class="form-control"
-      type="date"
-      name="createdDate"
-      [(ngModel)]="gallery.createdDate"
-    />
-  </div>
-
-  <div class="mb-3">
-    <label class="form-label">Updated date</label>
-    <input
-      class="form-control"
-      type="date"
-      name="updatedDate"
-      [(ngModel)]="gallery.updatedDate"
-    />
-  </div> -->
-
   <button
     class="btn btn-primary mt-3 mx-5"
     type="submit"
@@ -82,17 +81,15 @@
     {{ isEditing ? "Save" : "Create" }}
   </button>
 
-  <button
+  <!-- <button
     class="btn btn-secondary mt-3"
     [disabled]="isEditing == false"
     [routerLink]="['/gallery-images/create', gallery.id]"
   >
     Add Image
-  </button>
+  </button> -->
 
   <button class="btn btn-secondary mt-3 mx-5" (click)="goBack()">
     Back to List
   </button>
-
-  <gallery-image-table></gallery-image-table>
 </form>

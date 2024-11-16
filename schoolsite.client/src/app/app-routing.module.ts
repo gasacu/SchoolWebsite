@@ -38,6 +38,7 @@ const routes: Routes = [
 
   // Gallery routes
   { path: 'galleries', component: GalleryTableComponent },
+  { path: 'galleries/:id/images', component: GalleryImageTableComponent },
   { path: 'galleries/create', component: GalleryFormComponent },
   { path: 'galleries/edit/:id', component: GalleryFormComponent },
 

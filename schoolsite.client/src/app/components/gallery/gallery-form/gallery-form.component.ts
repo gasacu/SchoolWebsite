@@ -15,6 +15,7 @@ export class GalleryFormComponent implements OnInit {
 
   gallery: Gallery = {
     id: 0,
+    year: '',
     title: '',
     description: '',
     createdDate: new Date(),
@@ -47,27 +48,9 @@ export class GalleryFormComponent implements OnInit {
     this.galleryService.getGalleryById(id).subscribe({
       next: (gallery) => {
         this.gallery = gallery;
-        // If galleryImages are not included, fetch them separately
-        if (
-          !this.gallery.galleryImages ||
-          this.gallery.galleryImages.length === 0
-        ) {
-          this.loadGalleryImages(id);
-        }
       },
-      error: (err) => {
+      error: () => {
         this.errorMessage = 'Error loading gallery';
-      },
-    });
-  }
-
-  loadGalleryImages(galleryId: number): void {
-    this.galleryImageService.getGalleryImagesByGalleryId(galleryId).subscribe({
-      next: (images) => {
-        this.gallery.galleryImages = images;
-      },
-      error: (err) => {
-        console.error('Error loading gallery images:', err);
       },
     });
   }
