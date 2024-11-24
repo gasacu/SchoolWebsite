@@ -22,7 +22,6 @@ namespace SchoolSite.Server.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<GalleryImage>()
                 .HasOne<Gallery>() 
@@ -30,6 +29,15 @@ namespace SchoolSite.Server.Context
                 .HasForeignKey(gi => gi.GalleryId) 
                 .OnDelete(DeleteBehavior.Cascade) 
                 .HasConstraintName("FK_GalleryImages_Galleries");
+
+            modelBuilder.Entity<Gallery>()
+                .HasMany(g => g.GalleryImages)
+                .WithOne(gi => gi.Gallery)
+                .HasForeignKey(gi => gi.GalleryId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            base.OnModelCreating(modelBuilder);
+
 
             // Configure auto-increment ID's using Fluent API
             modelBuilder.Entity<Admin>()

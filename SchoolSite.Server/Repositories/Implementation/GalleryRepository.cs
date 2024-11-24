@@ -56,12 +56,28 @@ namespace SchoolSite.Server.Repositories.Implementation
 
         public async Task<GalleryDto> GetGalleryByIdAsync(int id)
         {
-            var gallery = await _context.Galleries.FirstOrDefaultAsync(x => x.Id == id);
-            //var gallery = await _context.Galleries.Include(g => g.GalleryImages).FirstOrDefaultAsync(g => g.Id == id);
+            var gallery = await _context.Galleries.Include(g => g.GalleryImages).FirstOrDefaultAsync(g => g.Id == id);
 
             var galleryDto = GalleryMapper.ToGalleryDto(gallery);
 
             return galleryDto;
+        }
+
+        public async Task<IList<GalleryImageDto>> GetImagesByGalleryIdAsync(int galleryId)
+        {
+            var galleryImages = new List<GalleryImageDto>();
+            var galleryImagesDb = await _context.GalleryImages.Where(img => img.GalleryId == galleryId).ToListAsync();
+
+            if (galleryImagesDb?.Any() == true)
+            {
+                foreach (var galleryImage in galleryImagesDb)
+                {
+                    var galleryImageDto = GalleryImageMapper.ToGalleryImageDto(galleryImage);
+                    galleryImages.Add(galleryImageDto);
+                }
+            }
+
+            return galleryImages;
         }
 
         public async Task UpdateGalleryAsync(GalleryDto galleryDto)
@@ -71,6 +87,7 @@ namespace SchoolSite.Server.Repositories.Implementation
             if (galleryDb != null)
             {
                 galleryDb.Id = galleryDto.Id;
+                galleryDb.Year = galleryDto.Year;
                 galleryDb.Title = galleryDto.Title;
                 galleryDb.Description = galleryDto.Description;
                 galleryDb.CreatedDate = galleryDto.CreatedDate;

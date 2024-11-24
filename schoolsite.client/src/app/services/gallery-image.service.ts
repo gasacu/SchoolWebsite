@@ -16,6 +16,10 @@ export class GalleryImageService {
     return this.http.get<GalleryImage>(`${this.apiUrl}/${id}`);
   }
 
+  getImagesByGalleryId(galleryId: number): Observable<GalleryImage[]> {
+    return this.http.get<GalleryImage[]>(`${this.apiUrl}/${galleryId}/images`);
+  }
+
   createGalleryImage(galleryImage: GalleryImage): Observable<GalleryImage> {
     return this.http.post<GalleryImage>(this.apiUrl, galleryImage);
   }
@@ -29,5 +33,13 @@ export class GalleryImageService {
       `${this.apiUrl}/${galleryImage.id}`,
       galleryImage
     );
+  }
+
+  uploadImage(file: File, galleryId: number): Observable<GalleryImage> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('galleryId', galleryId.toString());
+
+    return this.http.post<GalleryImage>(`${this.apiUrl}/upload`, formData);
   }
 }

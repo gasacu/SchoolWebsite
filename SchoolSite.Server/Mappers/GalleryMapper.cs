@@ -11,6 +11,7 @@ namespace SchoolSite.Server.Mappers
             return new Gallery
             {
                 Id = galleryDto.Id,
+                Year = galleryDto.Year,
                 Title = galleryDto.Title,
                 Description = galleryDto.Description,
                 CreatedDate = galleryDto.CreatedDate,
@@ -24,6 +25,7 @@ namespace SchoolSite.Server.Mappers
             return new GalleryDto
             {
                 Id = gallery.Id,
+                Year = gallery.Year,
                 Title = gallery.Title,
                 Description = gallery.Description,
                 CreatedDate = gallery.CreatedDate,

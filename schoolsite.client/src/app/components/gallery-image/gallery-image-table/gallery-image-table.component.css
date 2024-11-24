@@ -1,3 +1,42 @@
 mat-grid-tile {
   background: lightblue;
 }
+
+/* .card:hover .image-details-overlay {
+  opacity: 1;
+} */
+
+.image-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.image-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover Details Overlay */
+.image-details-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 12rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+.image-card:hover .image-details-overlay {
+  opacity: 1;
+  pointer-events: all;
+}

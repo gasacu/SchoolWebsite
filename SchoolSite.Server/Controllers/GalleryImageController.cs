@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SchoolSite.Server.DTOs;
+using SchoolSite.Server.Entities;
 using SchoolSite.Server.Mappers;
 using SchoolSite.Server.Repositories.Implementation;
 using SchoolSite.Server.Repositories.Interfaces;
@@ -12,11 +14,13 @@ namespace SchoolSite.Server.Controllers
     {
         private readonly IGalleryImageRepository _galleryImageRepository;
         private readonly IGalleryRepository _galleryRepository;
+        private readonly IWebHostEnvironment _env;
 
-        public GalleryImageController(IGalleryImageRepository galleryImageRepository, IGalleryRepository galleryRepository)
+        public GalleryImageController(IGalleryImageRepository galleryImageRepository, IGalleryRepository galleryRepository, IWebHostEnvironment env)
         {
             _galleryImageRepository = galleryImageRepository;
             _galleryRepository = galleryRepository;
+            _env = env;
         }
 
         [HttpGet("{galleryId}/images")]
@@ -25,6 +29,7 @@ namespace SchoolSite.Server.Controllers
             var allGalleryImages = await _galleryImageRepository.GetImagesByGalleryIdAsync(galleryId);
             return Ok(allGalleryImages);
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GalleryImageDto>> GetGalleryImageById(int id)
@@ -64,7 +69,35 @@ namespace SchoolSite.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteGalleryImageById(int id)
         {
+            var galleryImage = await _galleryImageRepository.GetGalleryImageByIdAsync(id);
+            if(galleryImage == null)
+            {
+                return NotFound("Gallery Image not found.");
+            }
+
+            var imagePath = galleryImage.ImagePath;
+            if(!string.IsNullOrEmpty(imagePath))
+            {
+                var imageFullPath = Path.Combine(_env.ContentRootPath, imagePath);
+                imageFullPath = imageFullPath.Replace("\\", "/");
+
+                try
+                {
+                    System.Threading.Thread.Sleep(100);
+                    if (System.IO.File.Exists(imageFullPath))
+                    {
+                        System.IO.File.Delete(imageFullPath);
+                    }
+                }
+                catch (IOException ex)
+                {
+                    Console.WriteLine($"Error deleting file: {ex.Message}");
+                }
+                
+            }
+
             await _galleryImageRepository.DeleteGalleryImageAsync(id);
+
             return NoContent();
         }
 
@@ -82,7 +115,90 @@ namespace SchoolSite.Server.Controllers
             }
 
             await _galleryImageRepository.UpdateGalleryImageAsync(galleryImageDto);
+
             return CreatedAtAction(nameof(GetGalleryImageById), new { id = galleryImageDto.Id }, galleryImageDto);
         }
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadImage([FromForm] IFormFile file, [FromForm] int galleryId)
+        {
+
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest(new { message = "File is not selected or empty." });
+            }
+
+            // Check if the Gallery exists
+            var galleryExists = await _galleryRepository.GetGalleryByIdAsync(galleryId);
+
+            if (galleryExists == null)
+            {
+                return NotFound($"Gallery with ID {galleryId} not found.");
+            }
+
+            // Define a dynamic path for the uploads folder
+            var projectRoot = Directory.GetCurrentDirectory();
+            var uploadsFolder = Path.Combine(projectRoot, "Uploads", "images", "galleries");
+            //Directory.CreateDirectory(uploadsFolder);
+
+            // Generate a unique filename
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            // Save the file to the server
+            using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // Generate the relative path to store in the database
+            var relativePath = Path.Combine("Uploads", "images", "galleries", fileName).Replace("\\", "/");
+
+            // Create a new GalleryImage object
+            var galleryImage = new GalleryImage
+            {
+                ImagePath = relativePath,
+                CreatedDate = DateTime.UtcNow,
+                GalleryId = galleryId
+            };
+
+            // Create a DTO to return the saved details
+            var galleryImageDto = new GalleryImageDto
+            {
+                Id = galleryImage.Id,
+                ImagePath = galleryImage.ImagePath,
+                CreatedDate = galleryImage.CreatedDate,
+                GalleryId = galleryImage.GalleryId
+            };
+
+            // Save the gallery image to the database
+            await _galleryImageRepository.AddGalleryImageAsync(galleryImageDto);
+
+            
+
+            return Ok(new { message = "Image uploaded successfully", galleryImage = galleryImageDto });
+
+        }
+
+        [HttpGet("get-image/{imagePath}")]
+        public IActionResult GetImage(string imagePath)
+        {
+            // Path to the folder where images are stored
+            var imagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "images", "galleries");
+
+            // Combine the base directory with the image path
+            var filePath = Path.Combine(imagesDirectory, imagePath);
+
+            // Check if the file exists
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound(); // Return 404 if image not found
+            }
+
+            // Open the image file and return it as a file response
+            var imageFile = System.IO.File.OpenRead(filePath);
+            return File(imageFile, "image/jpg"); // Adjust MIME type based on your image type (e.g., image/png)
+        }
+
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using SchoolSite.Server.Repositories.Interfaces;
 using SchoolSite.Server.Repositories.Implementation;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,11 +33,15 @@ builder.Services.AddScoped<IGalleryRepository, GalleryRepository>();
 builder.Services.AddScoped<IPageContentRepository, PageContentRepository>();
 builder.Services.AddScoped<ITeamMemberRepository, TeamMemberRepository>();
 
+//builder.Services.AddSingleton<IWebHostEnvironment>(provider =>
+//    provider.GetRequiredService<IWebHostEnvironment>());
+
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 
@@ -50,6 +55,7 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
     RequestPath = "/Uploads"  
 });
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

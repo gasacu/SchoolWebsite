@@ -105,7 +105,7 @@ namespace SchoolSite.Server.Controllers
 
             // Define a dynamic path for the uploads folder
             var projectRoot = Directory.GetCurrentDirectory();
-            var uploadsFolder = Path.Combine(projectRoot, "Uploads", "images");
+            var uploadsFolder = Path.Combine(projectRoot, "Uploads", "images", "team-members");
             Directory.CreateDirectory(uploadsFolder);
 
             // Generate a unique filename
@@ -119,7 +119,7 @@ namespace SchoolSite.Server.Controllers
             }
 
             // Generate the relative path to store in the database
-            var relativePath = Path.Combine("Uploads", "images", fileName).Replace("\\", "/");
+            var relativePath = Path.Combine("Uploads", "images", "team-members", fileName).Replace("\\", "/");
 
             return Ok(new { path = relativePath });
         }
@@ -128,7 +128,7 @@ namespace SchoolSite.Server.Controllers
         public IActionResult GetImage(string imagePath)
         {
             // Path to the folder where images are stored
-            var imagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "images");
+            var imagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "images", "team-members");
 
             // Combine the base directory with the image path
             var filePath = Path.Combine(imagesDirectory, imagePath);
@@ -147,7 +147,7 @@ namespace SchoolSite.Server.Controllers
         [HttpDelete("delete-image/{imagePath}")]
         public IActionResult DeleteImage(string imagePath)
         {
-            var imagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "images");
+            var imagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "images", "team-members");
             var filePath = Path.Combine(imagesDirectory, imagePath);
 
             if(System.IO.File.Exists(filePath))

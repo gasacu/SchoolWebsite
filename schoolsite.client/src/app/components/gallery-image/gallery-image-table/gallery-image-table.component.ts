@@ -1,9 +1,18 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { GalleryImage } from '../../../../entities/galleryImage';
 import { GalleryImageService } from '../../../services/gallery-image.service';
 import { Gallery } from '../../../../entities/gallery';
 import { GalleryService } from '../../../services/gallery.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { finalize } from 'rxjs';
 
 declare var bootstrap: any;
 
@@ -11,21 +20,30 @@ declare var bootstrap: any;
   selector: 'gallery-image-table',
   templateUrl: './gallery-image-table.component.html',
   styleUrl: './gallery-image-table.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GalleryImageTableComponent {
+export class GalleryImageTableComponent implements OnInit, AfterViewInit {
   galleryImages: GalleryImage[] = [];
   gallery: Gallery[] = [];
   galleryId!: number;
   selectedGalleryImageId: number | null = null;
   modalInstance: any;
+  viewImageModalInstance: any;
+  imageToView: string | null = null;
+  imgPath: string | null = null;
+  selectedFile: File | null = null;
+  selectedFileName: string | null = null;
+  successMessage: string | null = null;
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
+  @ViewChild('viewImageModal') viewImageModal!: ElementRef;
 
   constructor(
     private galleryImageService: GalleryImageService,
     private galleryService: GalleryService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -39,21 +57,137 @@ export class GalleryImageTableComponent {
   }
 
   ngAfterViewInit() {
-    // Initialize the modal instance
+    // Initialize the image modal
+    if (this.viewImageModal) {
+      this.viewImageModalInstance = new bootstrap.Modal(
+        this.viewImageModal.nativeElement,
+        {
+          backdrop: true,
+          keyboard: true,
+        }
+      );
+    }
+
+    // Initialize the delete modal instance
     if (this.exampleModal) {
-      this.modalInstance = new bootstrap.Modal(this.exampleModal.nativeElement);
+      this.modalInstance = new bootstrap.Modal(
+        this.exampleModal.nativeElement,
+        {
+          backdrop: 'static',
+          keyboard: true,
+        }
+      );
     }
   }
 
   loadGalleryImages(galleryId: number): void {
-    this.galleryService.getGalleryImagesByGalleryId(galleryId).subscribe({
+    this.galleryImageService.getImagesByGalleryId(galleryId).subscribe({
       next: (images) => {
         this.galleryImages = images;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading gallery images', err);
       },
     });
+  }
+
+  uploadAndAddImage(): void {
+    if (!this.selectedFile || !this.galleryId) {
+      console.error('No file selected or gallery ID missing');
+      return;
+    }
+
+    this.galleryImageService
+      .uploadImage(this.selectedFile, this.galleryId)
+      .pipe(
+        finalize(() => {
+          this.selectedFile = null;
+          this.selectedFileName = null;
+          // Reset the file input field
+          const fileInput = document.getElementById(
+            'uploadImageInput'
+          ) as HTMLInputElement;
+          if (fileInput) {
+            fileInput.value = ''; // Clear the file input
+          }
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.loadGalleryImages(this.galleryId);
+        },
+        error: (err) => console.error('Error uploading image', err),
+      });
+  }
+
+  onImageSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.selectedFileName = file.name;
+      this.selectedFile = file;
+    }
+  }
+
+  getImageUrl(imagePath: string | null): string {
+    if (imagePath && imagePath.trim()) {
+      return `https://localhost:7047/${imagePath}?timestamp=${new Date().getTime()}`;
+    }
+    return 'https://localhost:7047/Uploads/images/team-members/user.png';
+  }
+
+  viewImage(imageUrl: string, event: Event): void {
+    event.stopPropagation();
+    // Set the image source in the modal
+    const modalImage = document.getElementById(
+      'modalImage'
+    ) as HTMLImageElement;
+    if (modalImage) {
+      modalImage.src = imageUrl;
+    }
+
+    // Open the modal
+    if (this.viewImageModalInstance) {
+      this.viewImageModalInstance.show();
+      this.viewImageModal.nativeElement.removeAttribute('aria-hidden');
+    }
+  }
+
+  get galleryImageCount(): number {
+    return this.galleryImages.length;
+  }
+
+  openDeleteModal(imageId: number): void {
+    this.selectedGalleryImageId = imageId;
+    if (this.modalInstance) {
+      this.modalInstance.show();
+    }
+  }
+
+  closeModal(): void {
+    if (this.viewImageModalInstance) {
+      this.viewImageModalInstance.hide();
+    }
+  }
+
+  hoverIn(event: MouseEvent): void {
+    const overlay = (event.target as HTMLElement).querySelector(
+      '.image-details-overlay'
+    ) as HTMLElement;
+    if (overlay) {
+      overlay.style.opacity = '1';
+      overlay.style.pointerEvents = 'all';
+    }
+  }
+
+  hoverOut(event: MouseEvent): void {
+    const overlay = (event.target as HTMLElement).querySelector(
+      '.image-details-overlay'
+    ) as HTMLElement;
+    if (overlay) {
+      overlay.style.opacity = '0';
+      overlay.style.pointerEvents = 'none';
+    }
   }
 
   deleteGalleryImage(id: number): void {
@@ -64,7 +198,10 @@ export class GalleryImageTableComponent {
 
     this.galleryImageService.deleteGalleryImage(id).subscribe({
       next: () => {
-        this.galleryImages = this.galleryImages.filter((gi) => gi.id != id);
+        this.galleryImages = this.galleryImages.filter((gi) => gi.id !== id);
+
+        this.loadGalleryImages(this.galleryId);
+        this.successMessage = 'Image deleted successfully.';
 
         //Close the modal
         if (this.modalInstance) {
