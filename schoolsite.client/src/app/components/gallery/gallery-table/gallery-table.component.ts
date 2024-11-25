@@ -59,18 +59,34 @@ export class GalleryTableComponent implements OnInit, AfterViewInit {
     }
 
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   // Fetch the galleries from the API
   fetchGalleries(): void {
-    this.galleryService.getGallerys().subscribe((data: Gallery[]) => {
-      this.galleries = data;
+    this.galleryService.getGallerys().subscribe({
+      next: (data: any) => {
+        console.log('API Response:', data);
+        if (data && Array.isArray(data.$values)) {
+          this.galleries = data.$values;
+        } else if (Array.isArray(data)) {
+          this.galleries = data;
+        } else {
+          console.error('Expected array but got:', typeof data, data);
+          this.galleries = [];
+        }
 
-      this.availableYears = Array.from(
-        new Set(this.galleries.map((g) => g.year))
-      );
+        this.availableYears = Array.from(
+          new Set(this.galleries.map((g) => g.year))
+        );
 
-      this.dataSource.data = this.galleries;
+        this.dataSource.data = this.galleries;
+      },
+      error: (err) => {
+        console.error('Error fetching galleries:', err);
+        this.galleries = [];
+        this.dataSource.data = [];
+      },
     });
   }
 
@@ -80,25 +96,36 @@ export class GalleryTableComponent implements OnInit, AfterViewInit {
   }
 
   applyYearFilter(selectedYear: string): void {
-    if (selectedYear) {
+    this.selectedYear = selectedYear;
+    if (selectedYear === 'All') {
+      this.dataSource.data = [...this.galleries];
+    } else {
       this.dataSource.data = this.galleries.filter(
         (g) => g.year === selectedYear
       );
-    } else {
-      this.dataSource.data = this.galleries; // Reset to all data if no year is selected
     }
   }
 
-  filterByYear(): void {
-    if (this.selectedYear === 'All') {
-      this.filteredGalleries = [...this.galleries];
-    } else {
-      this.filteredGalleries = this.galleries.filter(
-        (gallery) => gallery.year === this.selectedYear
-      );
-    }
-    this.dataSource.data = this.filteredGalleries;
-  }
+  // applyYearFilter(selectedYear: string): void {
+  //   if (selectedYear) {
+  //     this.dataSource.data = this.galleries.filter(
+  //       (g) => g.year === selectedYear
+  //     );
+  //   } else {
+  //     this.dataSource.data = this.galleries; // Reset to all data if no year is selected
+  //   }
+  // }
+
+  // filterByYear(): void {
+  //   if (this.selectedYear === 'All') {
+  //     this.filteredGalleries = [...this.galleries];
+  //   } else {
+  //     this.filteredGalleries = this.galleries.filter(
+  //       (gallery) => gallery.year === this.selectedYear
+  //     );
+  //   }
+  //   this.dataSource.data = this.filteredGalleries;
+  // }
 
   navigateToGalleryImages(galleryId: number, event: MouseEvent): void {
     if ((event.target as HTMLElement).classList.contains('btn-danger')) {
@@ -110,17 +137,18 @@ export class GalleryTableComponent implements OnInit, AfterViewInit {
   }
 
   deleteGallery(id: number): void {
-    console.log('Gallery ID to delete: ', id);
-    if (id === null) {
-      console.error('No Id selected for deletion');
+    if (!id) {
+      console.error('No gallery Id provided for deletion');
       return;
     }
 
     this.galleryService.deleteGallery(id).subscribe({
       next: () => {
         this.galleries = this.galleries.filter((g) => g.id != id);
-        this.filterByYear();
-        this.dataSource.data = [...this.galleries];
+        this.dataSource.data =
+          this.selectedYear === 'All'
+            ? this.galleries
+            : this.galleries.filter((g) => g.year === this.selectedYear);
 
         //Close the modal
         if (this.modalInstance) {

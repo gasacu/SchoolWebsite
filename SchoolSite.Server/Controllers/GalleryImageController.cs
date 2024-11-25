@@ -67,7 +67,7 @@ namespace SchoolSite.Server.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteGalleryImageById(int id)
+        public async Task<IActionResult> DeleteGalleryImageById(int id)
         {
             var galleryImage = await _galleryImageRepository.GetGalleryImageByIdAsync(id);
             if(galleryImage == null)
@@ -120,14 +120,8 @@ namespace SchoolSite.Server.Controllers
         }
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadImage([FromForm] IFormFile file, [FromForm] int galleryId)
+        public async Task<IActionResult> UploadMultipleImages(IFormFileCollection files, [FromForm] int galleryId)
         {
-
-            if (file == null || file.Length == 0)
-            {
-                return BadRequest(new { message = "File is not selected or empty." });
-            }
-
             // Check if the Gallery exists
             var galleryExists = await _galleryRepository.GetGalleryByIdAsync(galleryId);
 
@@ -136,47 +130,50 @@ namespace SchoolSite.Server.Controllers
                 return NotFound($"Gallery with ID {galleryId} not found.");
             }
 
-            // Define a dynamic path for the uploads folder
-            var projectRoot = Directory.GetCurrentDirectory();
-            var uploadsFolder = Path.Combine(projectRoot, "Uploads", "images", "galleries");
-            //Directory.CreateDirectory(uploadsFolder);
-
-            // Generate a unique filename
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var filePath = Path.Combine(uploadsFolder, fileName);
-
-            // Save the file to the server
-            using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+            if (files == null || files.Count == 0)
             {
-                await file.CopyToAsync(stream);
+                return BadRequest(new { message = "No files provided for upload." });
             }
 
-            // Generate the relative path to store in the database
-            var relativePath = Path.Combine("Uploads", "images", "galleries", fileName).Replace("\\", "/");
+            var uploadedImages = new List<GalleryImageDto>();
 
-            // Create a new GalleryImage object
-            var galleryImage = new GalleryImage
+            foreach (var file in files)
             {
-                ImagePath = relativePath,
-                CreatedDate = DateTime.UtcNow,
-                GalleryId = galleryId
-            };
+                if (file.Length > 0)
+                {
+                    // Define a dynamic path for the uploads folder
+                    var projectRoot = Directory.GetCurrentDirectory();
+                    var uploadsFolder = Path.Combine(projectRoot, "Uploads", "images", "galleries");
 
-            // Create a DTO to return the saved details
-            var galleryImageDto = new GalleryImageDto
-            {
-                Id = galleryImage.Id,
-                ImagePath = galleryImage.ImagePath,
-                CreatedDate = galleryImage.CreatedDate,
-                GalleryId = galleryImage.GalleryId
-            };
+                    // Generate a unique filename
+                    var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    // Save the file to the server
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    // Generate the relative path to store in the database
+                    var relativePath = Path.Combine("Uploads", "images", "galleries", fileName).Replace("\\", "/");
+
+                    // Create a DTO to return the saved details
+                    var galleryImageDto = new GalleryImageDto
+                    {
+                        ImagePath = relativePath,
+                        CreatedDate = DateTime.UtcNow,
+                        GalleryId = galleryId
+                    };
+
+                    uploadedImages.Add(galleryImageDto);
+                }
+            }
 
             // Save the gallery image to the database
-            await _galleryImageRepository.AddGalleryImageAsync(galleryImageDto);
+            await _galleryImageRepository.AddRangeAsync(uploadedImages);
 
-            
-
-            return Ok(new { message = "Image uploaded successfully", galleryImage = galleryImageDto });
+            return Ok(uploadedImages);
 
         }
 

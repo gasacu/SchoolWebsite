@@ -7,12 +7,13 @@
     class="form-control mb-2"
     type="file"
     id="uploadImageInput"
-    (change)="onImageSelected($event)"
+    (change)="onMultipleImagesSelected($event)"
+    multiple
   />
   <button
     class="btn btn-primary"
-    [disabled]="!selectedFile"
-    (click)="uploadAndAddImage()"
+    [disabled]="!selectedFiles || selectedFiles.length === 0"
+    (click)="uploadMultipleImages()"
   >
     Upload Image
   </button>
@@ -24,22 +25,13 @@
     <p class="card-title m-0">Images: {{ galleryImageCount }}</p>
   </div>
 
-  <div
-    class="gallery-grid"
-    style="
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 15px;
-      margin: 1rem;
-    "
-  >
+  <div class="gallery-grid">
     <div *ngFor="let galleryImage of galleryImages" class="image-card shadow">
       <img
         [src]="getImageUrl(galleryImage.imagePath)"
         alt="Gallery Image"
         class="card-img-top"
         (click)="viewImage(getImageUrl(galleryImage.imagePath), $event)"
-        style="cursor: pointer; object-fit: cover; height: 200px"
       />
 
       <div class="card-footer text-center">

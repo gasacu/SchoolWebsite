@@ -97,5 +97,13 @@ namespace SchoolSite.Server.Repositories.Implementation
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task AddRangeAsync(IEnumerable<GalleryImageDto> galleryImages)
+        {
+            var galleryImageEntities = galleryImages.Select(galleryImageDto => GalleryImageMapper.ToGalleryImage(galleryImageDto)).ToList();
+
+            _context.GalleryImages.AddRange(galleryImageEntities);
+            await _context.SaveChangesAsync();
+        }
     }
 }

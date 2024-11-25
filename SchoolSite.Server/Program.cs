@@ -33,6 +33,11 @@ builder.Services.AddScoped<IGalleryRepository, GalleryRepository>();
 builder.Services.AddScoped<IPageContentRepository, PageContentRepository>();
 builder.Services.AddScoped<ITeamMemberRepository, TeamMemberRepository>();
 
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.WriteIndented = true; // Optional: For better readability
+});
 //builder.Services.AddSingleton<IWebHostEnvironment>(provider =>
 //    provider.GetRequiredService<IWebHostEnvironment>());
 

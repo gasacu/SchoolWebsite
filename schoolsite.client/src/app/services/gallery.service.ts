@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { Gallery } from '../../entities/gallery';
 import { GalleryImage } from '../../entities/galleryImage';
 
@@ -14,7 +14,18 @@ export class GalleryService {
   constructor(private http: HttpClient) {}
 
   getGallerys(): Observable<Gallery[]> {
-    return this.http.get<Gallery[]>(this.apiUrl);
+    return this.http.get<any>(this.apiUrl).pipe(
+      map((response) => {
+        if (response && Array.isArray(response.$values)) {
+          return response.$values;
+        }
+        return response;
+      }),
+      catchError((error) => {
+        console.error('Error fetching galleris:', error);
+        return of([]);
+      })
+    );
   }
 
   getGalleryById(id: number): Observable<Gallery> {

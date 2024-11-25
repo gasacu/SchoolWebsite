@@ -26,7 +26,7 @@
   </mat-form-field>
 </div>
 
-<div class="mat-elevation-z8">
+<div *ngIf="galleries.length > 0; else noGalleries" class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
     <ng-container matColumnDef="year">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Year</th>
@@ -97,6 +97,10 @@
   >
   </mat-paginator>
 </div>
+
+<ng-template #noGalleries>
+  <p>No galleries available.</p>
+</ng-template>
 
 <!-- Modal -->
 <div

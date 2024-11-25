@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
 import { GalleryImage } from '../../entities/galleryImage';
 
 @Injectable({
@@ -17,7 +17,14 @@ export class GalleryImageService {
   }
 
   getImagesByGalleryId(galleryId: number): Observable<GalleryImage[]> {
-    return this.http.get<GalleryImage[]>(`${this.apiUrl}/${galleryId}/images`);
+    return this.http
+      .get<GalleryImage[]>(`${this.apiUrl}/${galleryId}/images`)
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching gallery images', error);
+          return of([]);
+        })
+      );
   }
 
   createGalleryImage(galleryImage: GalleryImage): Observable<GalleryImage> {
@@ -35,11 +42,7 @@ export class GalleryImageService {
     );
   }
 
-  uploadImage(file: File, galleryId: number): Observable<GalleryImage> {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('galleryId', galleryId.toString());
-
-    return this.http.post<GalleryImage>(`${this.apiUrl}/upload`, formData);
+  uploadMultipleImages(formData: FormData): Observable<any[]> {
+    return this.http.post<any[]>(`${this.apiUrl}/upload`, formData);
   }
 }

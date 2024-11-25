@@ -23,7 +23,7 @@ declare var bootstrap: any;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GalleryImageTableComponent implements OnInit, AfterViewInit {
-  galleryImages: GalleryImage[] = [];
+  galleryImages: any[] = [];
   gallery: Gallery[] = [];
   galleryId!: number;
   selectedGalleryImageId: number | null = null;
@@ -31,7 +31,7 @@ export class GalleryImageTableComponent implements OnInit, AfterViewInit {
   viewImageModalInstance: any;
   imageToView: string | null = null;
   imgPath: string | null = null;
-  selectedFile: File | null = null;
+  selectedFiles: File[] = [];
   selectedFileName: string | null = null;
   successMessage: string | null = null;
 
@@ -83,7 +83,8 @@ export class GalleryImageTableComponent implements OnInit, AfterViewInit {
   loadGalleryImages(galleryId: number): void {
     this.galleryImageService.getImagesByGalleryId(galleryId).subscribe({
       next: (images) => {
-        this.galleryImages = images;
+        console.log('Loaded images:', images);
+        this.galleryImages = Array.isArray(images) ? images : [];
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -92,41 +93,32 @@ export class GalleryImageTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  uploadAndAddImage(): void {
-    if (!this.selectedFile || !this.galleryId) {
-      console.error('No file selected or gallery ID missing');
-      return;
+  onMultipleImagesSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input?.files) {
+      this.selectedFiles = Array.from(input.files);
     }
-
-    this.galleryImageService
-      .uploadImage(this.selectedFile, this.galleryId)
-      .pipe(
-        finalize(() => {
-          this.selectedFile = null;
-          this.selectedFileName = null;
-          // Reset the file input field
-          const fileInput = document.getElementById(
-            'uploadImageInput'
-          ) as HTMLInputElement;
-          if (fileInput) {
-            fileInput.value = ''; // Clear the file input
-          }
-        })
-      )
-      .subscribe({
-        next: () => {
-          this.loadGalleryImages(this.galleryId);
-        },
-        error: (err) => console.error('Error uploading image', err),
-      });
   }
 
-  onImageSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      this.selectedFileName = file.name;
-      this.selectedFile = file;
-    }
+  uploadMultipleImages(): void {
+    const formData = new FormData();
+
+    this.selectedFiles.forEach((file) => formData.append('files', file));
+    formData.append('galleryId', this.galleryId.toString());
+
+    this.galleryImageService.uploadMultipleImages(formData).subscribe({
+      next: (response) => {
+        console.log('Response:', response);
+        const images = Array.isArray(response) ? response : [];
+
+        this.galleryImages.push(...images);
+        this.selectedFiles = [];
+        this.successMessage = 'Images uploaded successfully!';
+        setTimeout(() => (this.successMessage = null), 3000);
+        this.loadGalleryImages(this.galleryId);
+      },
+      error: (err) => console.error('Error uploading image', err),
+    });
   }
 
   getImageUrl(imagePath: string | null): string {
@@ -191,25 +183,25 @@ export class GalleryImageTableComponent implements OnInit, AfterViewInit {
   }
 
   deleteGalleryImage(id: number): void {
-    if (id === null) {
-      console.error('No Id selected for deletion');
+    if (!id) {
+      console.error('No Id provided for deletion');
       return;
     }
 
     this.galleryImageService.deleteGalleryImage(id).subscribe({
       next: () => {
         this.galleryImages = this.galleryImages.filter((gi) => gi.id !== id);
+        this.successMessage = 'Image successfully deleted.';
+        setTimeout(() => (this.successMessage = null), 3000);
 
         this.loadGalleryImages(this.galleryId);
-        this.successMessage = 'Image deleted successfully.';
 
-        //Close the modal
         if (this.modalInstance) {
           this.modalInstance.hide();
         }
       },
       error: (err) => {
-        console.error('Error for deleting gallery image', err);
+        console.error('Error deleting gallery image', err);
       },
     });
   }

@@ -10,5 +10,6 @@ namespace SchoolSite.Server.Repositories.Interfaces
         Task AddGalleryImageAsync(GalleryImageDto galleryImageDto);
         Task UpdateGalleryImageAsync(GalleryImageDto galleryImageDto);
         Task DeleteGalleryImageAsync(int id);
+        Task AddRangeAsync(IEnumerable<GalleryImageDto> galleryImages);
     }
 }
