@@ -15,7 +15,6 @@ import { GalleryFormComponent } from './components/gallery/gallery-form/gallery-
 
 // GalleryImage components
 import { GalleryImageTableComponent } from './components/gallery-image/gallery-image-table/gallery-image-table.component';
-import { GalleryImageFormComponent } from './components/gallery-image/gallery-image-form/gallery-image-form.component';
 
 // PageContent components
 import { PageContentTableComponent } from './components/page-content/page-content-table/page-content-table.component';
@@ -44,11 +43,6 @@ const routes: Routes = [
 
   // GalleryImage routes
   { path: 'gallery-images', component: GalleryImageTableComponent },
-  {
-    path: 'gallery-images/create/:galleryId',
-    component: GalleryImageFormComponent,
-  },
-  { path: 'gallery-images/edit/:id', component: GalleryImageFormComponent },
 
   // PageContent routes
   { path: 'page-contents', component: PageContentTableComponent },

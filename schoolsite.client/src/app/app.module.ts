@@ -25,7 +25,6 @@ import { PageContentTableComponent } from './components/page-content/page-conten
 import { TeamMemberTableComponent } from './components/team-member/team-member-table/team-member-table.component';
 import { AdminFormComponent } from './components/admin/admin-form/admin-form.component';
 import { DocumentFormComponent } from './components/document/document-form/document-form.component';
-import { GalleryImageFormComponent } from './components/gallery-image/gallery-image-form/gallery-image-form.component';
 import { GalleryFormComponent } from './components/gallery/gallery-form/gallery-form.component';
 import { PageContentFormComponent } from './components/page-content/page-content-form/page-content-form.component';
 import { TeamMemberFormComponent } from './components/team-member/team-member-form/team-member-form.component';
@@ -42,7 +41,6 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     TeamMemberTableComponent,
     AdminFormComponent,
     DocumentFormComponent,
-    GalleryImageFormComponent,
     GalleryFormComponent,
     PageContentFormComponent,
     TeamMemberFormComponent,

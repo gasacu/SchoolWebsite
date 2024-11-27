@@ -9,8 +9,6 @@ import {
 } from '@angular/core';
 import { GalleryImage } from '../../../../entities/galleryImage';
 import { GalleryImageService } from '../../../services/gallery-image.service';
-import { Gallery } from '../../../../entities/gallery';
-import { GalleryService } from '../../../services/gallery.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
@@ -24,23 +22,23 @@ declare var bootstrap: any;
 })
 export class GalleryImageTableComponent implements OnInit, AfterViewInit {
   galleryImages: any[] = [];
-  gallery: Gallery[] = [];
   galleryId!: number;
   selectedGalleryImageId: number | null = null;
+  readonly PLACEHOLDER_IMAGE =
+    'https://localhost:7047/Uploads/images/team-members/user.png';
   modalInstance: any;
   viewImageModalInstance: any;
-  imageToView: string | null = null;
-  imgPath: string | null = null;
   selectedFiles: File[] = [];
-  selectedFileName: string | null = null;
   successMessage: string | null = null;
+  currentPage = 1;
+  pageSize = 6;
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
   @ViewChild('viewImageModal') viewImageModal!: ElementRef;
+  @ViewChild('uploadImageInput') uploadImageInput!: ElementRef;
 
   constructor(
     private galleryImageService: GalleryImageService,
-    private galleryService: GalleryService,
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
@@ -83,49 +81,84 @@ export class GalleryImageTableComponent implements OnInit, AfterViewInit {
   loadGalleryImages(galleryId: number): void {
     this.galleryImageService.getImagesByGalleryId(galleryId).subscribe({
       next: (images) => {
-        console.log('Loaded images:', images);
         this.galleryImages = Array.isArray(images) ? images : [];
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Error loading gallery images', err);
-      },
+      error: (err) => this.handleError(err, 'image deletion'),
     });
+  }
+
+  validateFile(file: File): boolean {
+    const validExtensions = ['jpg', 'jpeg', 'png'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    const extension = file.name.split('.').pop()?.toLowerCase();
+
+    if (!validExtensions.includes(extension!)) {
+      alert(`${file.name} has an invalid file type.`);
+      return false;
+    }
+    if (file.size > maxSize) {
+      alert(`${file.name} exceeds the size limit.`);
+      return false;
+    }
+    return true;
   }
 
   onMultipleImagesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input?.files) {
-      this.selectedFiles = Array.from(input.files);
+      const files = Array.from(input.files).filter((file) =>
+        this.validateFile(file)
+      );
+      this.selectedFiles.push(...files);
+    }
+  }
+
+  fileToUrl(file: File): string {
+    return URL.createObjectURL(file);
+  }
+
+  removeSelectedFile(file: File): void {
+    this.selectedFiles = this.selectedFiles.filter((f) => f !== file);
+
+    const inputElement = document.getElementById(
+      'uploadImageInput'
+    ) as HTMLInputElement;
+    if (inputElement) {
+      (this.uploadImageInput.nativeElement as HTMLInputElement).value = '';
     }
   }
 
   uploadMultipleImages(): void {
-    const formData = new FormData();
+    if (!this.selectedFiles.length) return;
 
+    const formData = new FormData();
     this.selectedFiles.forEach((file) => formData.append('files', file));
     formData.append('galleryId', this.galleryId.toString());
 
     this.galleryImageService.uploadMultipleImages(formData).subscribe({
       next: (response) => {
-        console.log('Response:', response);
         const images = Array.isArray(response) ? response : [];
 
-        this.galleryImages.push(...images);
+        this.galleryImages = [...this.galleryImages, ...images];
         this.selectedFiles = [];
-        this.successMessage = 'Images uploaded successfully!';
+        this.successMessage = 'Images uploaded successfully.';
+
         setTimeout(() => (this.successMessage = null), 3000);
+
         this.loadGalleryImages(this.galleryId);
       },
-      error: (err) => console.error('Error uploading image', err),
+      error: (err) => {
+        this.handleError(err, 'image deletion'),
+          alert('An error occurred during the upload process.');
+      },
     });
   }
 
   getImageUrl(imagePath: string | null): string {
-    if (imagePath && imagePath.trim()) {
-      return `https://localhost:7047/${imagePath}?timestamp=${new Date().getTime()}`;
-    }
-    return 'https://localhost:7047/Uploads/images/team-members/user.png';
+    return imagePath?.trim()
+      ? `https://localhost:7047/${imagePath}?timestamp=${new Date().getTime()}`
+      : this.PLACEHOLDER_IMAGE;
   }
 
   viewImage(imageUrl: string, event: Event): void {
@@ -150,6 +183,10 @@ export class GalleryImageTableComponent implements OnInit, AfterViewInit {
   }
 
   openDeleteModal(imageId: number): void {
+    if (!imageId) {
+      console.error('Invalid image ID provided');
+      return;
+    }
     this.selectedGalleryImageId = imageId;
     if (this.modalInstance) {
       this.modalInstance.show();
@@ -166,20 +203,21 @@ export class GalleryImageTableComponent implements OnInit, AfterViewInit {
     const overlay = (event.target as HTMLElement).querySelector(
       '.image-details-overlay'
     ) as HTMLElement;
-    if (overlay) {
-      overlay.style.opacity = '1';
-      overlay.style.pointerEvents = 'all';
-    }
+    overlay?.classList.add('active');
   }
 
   hoverOut(event: MouseEvent): void {
     const overlay = (event.target as HTMLElement).querySelector(
       '.image-details-overlay'
     ) as HTMLElement;
-    if (overlay) {
-      overlay.style.opacity = '0';
-      overlay.style.pointerEvents = 'none';
-    }
+    overlay?.classList.remove('active');
+  }
+
+  handleError(err: any, action: string): void {
+    const errorMessage =
+      err?.error?.message || err.message || 'Unknown error occurred';
+    console.error(`Error during ${action}:`, errorMessage);
+    alert(`An error occurred during ${action}: ${errorMessage}`);
   }
 
   deleteGalleryImage(id: number): void {
@@ -200,10 +238,30 @@ export class GalleryImageTableComponent implements OnInit, AfterViewInit {
           this.modalInstance.hide();
         }
       },
-      error: (err) => {
-        console.error('Error deleting gallery image', err);
-      },
+      error: (err) => this.handleError(err, 'image deletion'),
     });
+  }
+
+  get paginatedGalleryImages(): GalleryImage[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.galleryImages.slice(startIndex, endIndex);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.galleryImages.length / this.pageSize);
+  }
+
+  get totalPagesArray(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  changePage(page: number): void {
+    if (page < 1 || page > this.totalPages) {
+      return;
+    }
+    this.currentPage = page;
+    this.cdr.detectChanges();
   }
 
   goBack() {

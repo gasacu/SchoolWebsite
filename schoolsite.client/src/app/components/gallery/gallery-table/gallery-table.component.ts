@@ -51,22 +51,19 @@ export class GalleryTableComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Initialize sort functionality
     this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+
     // Initialize the modal instance
     if (this.exampleModal) {
       this.modalInstance = new bootstrap.Modal(this.exampleModal.nativeElement);
     }
-
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   // Fetch the galleries from the API
   fetchGalleries(): void {
     this.galleryService.getGallerys().subscribe({
       next: (data: any) => {
-        console.log('API Response:', data);
         if (data && Array.isArray(data.$values)) {
           this.galleries = data.$values;
         } else if (Array.isArray(data)) {
@@ -97,35 +94,17 @@ export class GalleryTableComponent implements OnInit, AfterViewInit {
 
   applyYearFilter(selectedYear: string): void {
     this.selectedYear = selectedYear;
+
     if (selectedYear === 'All') {
-      this.dataSource.data = [...this.galleries];
+      this.dataSource.data = this.galleries;
     } else {
       this.dataSource.data = this.galleries.filter(
         (g) => g.year === selectedYear
       );
     }
+    this.paginator?.firstPage();
+    this.dataSource._updateChangeSubscription();
   }
-
-  // applyYearFilter(selectedYear: string): void {
-  //   if (selectedYear) {
-  //     this.dataSource.data = this.galleries.filter(
-  //       (g) => g.year === selectedYear
-  //     );
-  //   } else {
-  //     this.dataSource.data = this.galleries; // Reset to all data if no year is selected
-  //   }
-  // }
-
-  // filterByYear(): void {
-  //   if (this.selectedYear === 'All') {
-  //     this.filteredGalleries = [...this.galleries];
-  //   } else {
-  //     this.filteredGalleries = this.galleries.filter(
-  //       (gallery) => gallery.year === this.selectedYear
-  //     );
-  //   }
-  //   this.dataSource.data = this.filteredGalleries;
-  // }
 
   navigateToGalleryImages(galleryId: number, event: MouseEvent): void {
     if ((event.target as HTMLElement).classList.contains('btn-danger')) {

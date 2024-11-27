@@ -13,7 +13,7 @@
   <mat-form-field appearance="outline" class="year-filter">
     <mat-label>Select Year</mat-label>
     <mat-select (selectionChange)="applyYearFilter($event.value)">
-      <mat-option>All</mat-option>
+      <mat-option value="All">All</mat-option>
       <mat-option *ngFor="let year of availableYears" [value]="year">
         {{ year }}
       </mat-option>
@@ -91,7 +91,9 @@
   </table>
 
   <mat-paginator
-    [pageSizeOptions]="[5, 10, 20]"
+    [length]="dataSource.data.length"
+    [pageSize]="5"
+    [pageSizeOptions]="[5, 10, 25, 100]"
     showFirstLastButtons
     aria-label="Select page of periodic elements"
   >

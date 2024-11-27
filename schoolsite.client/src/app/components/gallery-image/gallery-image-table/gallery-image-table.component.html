@@ -10,6 +10,7 @@
     (change)="onMultipleImagesSelected($event)"
     multiple
   />
+
   <button
     class="btn btn-primary"
     [disabled]="!selectedFiles || selectedFiles.length === 0"
@@ -19,6 +20,28 @@
   </button>
 </div>
 
+<!-- Image preview -->
+<div class="image-preview-container d-flex flex-wrap">
+  <div
+    *ngFor="let file of selectedFiles"
+    class="preview-card m-2 border rounded"
+  >
+    <img
+      [src]="fileToUrl(file)"
+      alt="Preview"
+      class="preview-thumbnail img-thumbnail"
+    />
+    <button
+      type="button"
+      class="btn btn-danger btn-sm mt-1"
+      aria-label="Remove selected file"
+      (click)="removeSelectedFile(file)"
+    >
+      Remove
+    </button>
+  </div>
+</div>
+
 <!-- Grid Display -->
 <div class="card shadow-sm">
   <div class="card-header bg-primary text-white">
@@ -26,12 +49,18 @@
   </div>
 
   <div class="gallery-grid">
-    <div *ngFor="let galleryImage of galleryImages" class="image-card shadow">
+    <div
+      *ngFor="let galleryImage of paginatedGalleryImages"
+      class="image-card shadow"
+    >
       <img
         [src]="getImageUrl(galleryImage.imagePath)"
         alt="Gallery Image"
         class="card-img-top"
+        tabindex="0"
+        (keydown.enter)="viewImage(getImageUrl(galleryImage.imagePath), $event)"
         (click)="viewImage(getImageUrl(galleryImage.imagePath), $event)"
+        aria-label="View full image"
       />
 
       <div class="card-footer text-center">
@@ -51,6 +80,27 @@
       </div>
     </div>
   </div>
+
+  <!-- Pagination -->
+  <nav class="mt-3">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" (click)="changePage(currentPage - 1)">Previous</a>
+      </li>
+      <li
+        class="page-item"
+        *ngFor="let page of totalPagesArray"
+        [class.active]="page === currentPage"
+      >
+        <button class="page-link" (click)="changePage(page)">
+          {{ page }}
+        </button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link" (click)="changePage(currentPage + 1)">Next</a>
+      </li>
+    </ul>
+  </nav>
 </div>
 
 <!-- Modal for Viewing Image -->
