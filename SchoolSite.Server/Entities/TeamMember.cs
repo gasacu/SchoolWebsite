@@ -15,7 +15,8 @@ namespace SchoolSite.Server.Entities
         [Required(ErrorMessage = "Department is required")]
         public string Department { get; set; }
 
-        public string Bio { get; set; }
+        public string Faculty { get; set; }
+        public string Specialty { get; set; }
 
         public string ImagePath { get; set; }
 

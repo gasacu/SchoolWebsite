@@ -1,4 +1,6 @@
-<h2 class="text-center my-5">{{ isEditing ? "Edit" : "Create" }} Gallery</h2>
+<h2 class="text-center my-5">
+  {{ isEditing ? "Editează" : "Creează" }} Galerie
+</h2>
 
 <div class="text-danger text-center" *ngIf="errorMessage != ''">
   {{ errorMessage }}
@@ -11,7 +13,7 @@
   class="border rounded p-5 w-75 mb-5 mx-auto"
 >
   <div class="mb-3">
-    <label class="form-label">Year*</label>
+    <label class="form-label">An*</label>
     <input
       required
       maxlength="256"
@@ -31,7 +33,7 @@
     </div>
   </div>
   <div class="mb-3">
-    <label class="form-label">Title*</label>
+    <label class="form-label">Titlu*</label>
     <input
       required
       maxlength="256"
@@ -51,7 +53,7 @@
     </div>
   </div>
   <div class="mb-3">
-    <label class="form-label">Description*</label>
+    <label class="form-label">Descriere*</label>
     <input
       required
       maxlength="256"
@@ -78,7 +80,7 @@
     type="submit"
     [disabled]="galleryForm.invalid"
   >
-    {{ isEditing ? "Save" : "Create" }}
+    {{ isEditing ? "Salvează" : "Adaugă" }}
   </button>
 
   <!-- <button
@@ -89,7 +91,5 @@
     Add Image
   </button> -->
 
-  <button class="btn btn-secondary mt-3 mx-5" (click)="goBack()">
-    Back to List
-  </button>
+  <button class="btn btn-secondary mt-3 mx-5" (click)="goBack()">Înapoi</button>
 </form>

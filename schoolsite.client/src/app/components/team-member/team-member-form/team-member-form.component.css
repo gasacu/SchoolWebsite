@@ -1,0 +1,21 @@
+.drag-drop {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+.drag-drop.dragging {
+  border-color: #007bff;
+}
+.img-profile {
+  max-width: 50%;
+  height: 60%;
+}
+
+img.img-thumbnail {
+  transition: transform 0.2s ease;
+}
+
+img.img-thumbnail:hover {
+  transform: scale(1.05);
+}

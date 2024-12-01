@@ -1,4 +1,6 @@
-<h2 class="text-center my-5">{{ isEditing ? "Edit" : "Create" }} Admin</h2>
+<h2 class="text-center my-5">
+  {{ isEditing ? "Editează" : "Creează" }} Utilizator
+</h2>
 
 <div class="text-danger text-center" *ngIf="errorMessage != ''">
   {{ errorMessage }}
@@ -11,7 +13,7 @@
   class="border rounded p-5 w-75 mb-5 mx-auto"
 >
   <div class="mb-3">
-    <label class="form-label">Name*</label>
+    <label class="form-label">Nume*</label>
     <input
       required
       maxlength="64"
@@ -32,7 +34,7 @@
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Username*</label>
+    <label class="form-label">Utilizator*</label>
     <input
       required
       maxlength="32"
@@ -57,11 +59,11 @@
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Password*</label>
+    <label class="form-label">Parolă*</label>
     <input
       required
       minlength="6"
-      maxlength="128"
+      maxlength="64"
       #passwordHash="ngModel"
       class="form-control"
       type="text"
@@ -80,7 +82,7 @@
         Password must be at least 6 characters.
       </div>
       <div class="text-danger" *ngIf="passwordHash.errors?.['maxlength']">
-        Password cannot exceed 128 characters.
+        Password cannot exceed 64 characters.
       </div>
     </div>
   </div>
@@ -90,10 +92,8 @@
     type="submit"
     [disabled]="adminForm.invalid"
   >
-    {{ isEditing ? "Save" : "Create" }}
+    {{ isEditing ? "Salvează" : "Adaugă" }}
   </button>
 
-  <button class="btn btn-secondary mt-3" (click)="goBack()">
-    Back to List
-  </button>
+  <button class="btn btn-secondary mt-3" (click)="goBack()">Înapoi</button>
 </form>

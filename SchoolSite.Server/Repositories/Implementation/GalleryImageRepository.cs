@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using SchoolSite.Server.Context;
 using SchoolSite.Server.DTOs;
 using SchoolSite.Server.Entities;

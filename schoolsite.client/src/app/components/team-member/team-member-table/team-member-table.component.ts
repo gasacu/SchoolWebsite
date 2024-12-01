@@ -36,7 +36,8 @@ export class TeamMemberTableComponent implements OnInit, AfterViewInit {
     'name',
     'role',
     'department',
-    'bio',
+    'faculty',
+    'specialty',
     'actions',
   ];
 

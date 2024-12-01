@@ -7,7 +7,7 @@ namespace SchoolSite.Server.DTOs
     {
         public int Id { get; set; }
 
-        [StringLength(256, ErrorMessage = "Image Path cannot be longer than 256 characters.")]
+        [StringLength(255, ErrorMessage = "Image Path cannot be longer than 255 characters.")]
         [Required(ErrorMessage = "Image Path is required.")]
         public string ImagePath { get; set; }
 

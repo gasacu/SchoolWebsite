@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SchoolSite.Server.DTOs;
+using SchoolSite.Server.Entities;
 using SchoolSite.Server.Repositories.Interfaces;
+using System.ComponentModel;
 
 namespace SchoolSite.Server.Controllers
 {
@@ -64,10 +66,22 @@ namespace SchoolSite.Server.Controllers
                 var imageFullPath = Path.Combine(_env.ContentRootPath, imagePath);
 
                 imageFullPath = imageFullPath.Replace("\\", "/");
-                
-                if (System.IO.File.Exists(imageFullPath))
+
+                try
                 {
-                    System.IO.File.Delete(imageFullPath);
+                    if (System.IO.File.Exists(imageFullPath))
+                    {
+                        using (var stream = System.IO.File.Open(imageFullPath, FileMode.Open, FileAccess.Read, FileShare.None))
+                        {
+                            stream.Close();
+                        }
+                            
+                        System.IO.File.Delete(imageFullPath);
+                    }
+                }
+                catch (IOException ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, $"Could not delete the image: {ex.Message}");
                 }
             }
 
@@ -93,6 +107,25 @@ namespace SchoolSite.Server.Controllers
 
             return CreatedAtAction(nameof(GetTeamMemberById), new { id = teamMemberDto.Id }, teamMemberDto);
 
+        }
+
+        [HttpGet("departments")]
+        public IActionResult GetDepartments()
+        {
+            var departments = Enum.GetValues(typeof(Department))
+                .Cast<Department>()
+                .Select(d => new
+                {
+                    Value = d.ToString(),
+                    Description = d.GetType()
+                        .GetField(d.ToString())
+                        .GetCustomAttributes(typeof(DescriptionAttribute), false)
+                        .Cast<DescriptionAttribute>()
+                        .FirstOrDefault()?.Description ?? d.ToString()
+
+                });
+
+            return Ok(departments);
         }
 
         [HttpPost("upload")]
@@ -136,12 +169,29 @@ namespace SchoolSite.Server.Controllers
             // Check if the file exists
             if (!System.IO.File.Exists(filePath))
             {
-                return NotFound(); // Return 404 if image not found
+                return NotFound(); 
             }
 
             // Open the image file and return it as a file response
             var imageFile = System.IO.File.OpenRead(filePath);
-            return File(imageFile, "image/jpg"); // Adjust MIME type based on your image type (e.g., image/png)
+            var extension = Path.GetExtension(filePath)?.ToLowerInvariant();
+            string mimeType = extension switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                ".bmp" => "image/bmp",
+                ".svg" => "image/svg",
+                ".tiff" => "image/tiff",
+                ".webp" => "image/webp",
+                _ => "application/octet-stream" // Default for unknown types
+            };
+
+            if (mimeType == "application/octet-stream")
+            {
+                return BadRequest("Unsupported file type.");
+            }
+            return File(imageFile, mimeType); 
         }
 
         [HttpDelete("delete-image/{imagePath}")]

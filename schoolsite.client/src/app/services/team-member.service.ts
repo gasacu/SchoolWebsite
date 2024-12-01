@@ -45,4 +45,10 @@ export class TeamMemberService {
   deleteImage(imagePath: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/delete-image/${imagePath}`);
   }
+
+  getDepartments(): Observable<{ value: string; description: string }[]> {
+    return this.http.get<{ value: string; description: string }[]>(
+      `${this.apiUrl}/departments`
+    );
+  }
 }

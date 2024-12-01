@@ -13,7 +13,8 @@ namespace SchoolSite.Server.Mappers
                 Name = teamMemberDto.Name,
                 Role = teamMemberDto.Role,
                 Department = teamMemberDto.Department,
-                Bio = teamMemberDto.Bio,
+                Faculty = teamMemberDto.Faculty,
+                Specialty = teamMemberDto.Specialty,
                 ImagePath = teamMemberDto.ImagePath
             };
         }
@@ -26,7 +27,8 @@ namespace SchoolSite.Server.Mappers
                 Name = teamMember.Name,
                 Role = teamMember.Role,
                 Department = teamMember.Department,
-                Bio = teamMember.Bio,
+                Faculty = teamMember.Faculty,
+                Specialty = teamMember.Specialty,
                 ImagePath = teamMember.ImagePath
             };
         }

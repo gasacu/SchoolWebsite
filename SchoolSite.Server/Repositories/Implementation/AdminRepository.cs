@@ -14,6 +14,33 @@ namespace SchoolSite.Server.Repositories.Implementation
             _context = context;
         }
 
+        public async Task<IEnumerable<AdminDto>> GetAllAsync()
+        {
+            var admins = new List<AdminDto>();
+            var adminsDb = await _context.Admins.ToListAsync();
+
+            if (adminsDb?.Any() == true)
+            {
+                foreach (var admin in adminsDb)
+                {
+                    var adminDto = AdminMapper.ToAdminDto(admin);
+                    admins.Add(adminDto);
+                }
+            }
+
+            return admins;
+        }
+
+        public async Task<AdminDto?> GetByIdAsync(int id)
+        {
+            var admin = await _context.Admins.FindAsync(id);
+
+            var adminDto = AdminMapper.ToAdminDto(admin);
+
+            return adminDto;
+
+        }
+
         public async Task AddAdminAsync(AdminDto adminDto)
         {
             var admin = AdminMapper.ToAdmin(adminDto);
@@ -34,33 +61,6 @@ namespace SchoolSite.Server.Repositories.Implementation
             _context.Admins.Remove(adminDb);
             await _context.SaveChangesAsync();
 
-        }
-
-        public async Task<IEnumerable<AdminDto>> GetAllAsync()
-        {
-            var admins = new List<AdminDto>();
-            var adminsDb = await _context.Admins.ToListAsync();
-
-            if(adminsDb?.Any() == true)
-            {
-                foreach(var admin in adminsDb)
-                {
-                    var adminDto = AdminMapper.ToAdminDto(admin);
-                    admins.Add(adminDto);
-                }
-            }
-
-            return admins;
-        }
-
-        public async Task<AdminDto?> GetByIdAsync(int id)
-        {
-            var admin = await _context.Admins.FindAsync(id);
-
-            var adminDto = AdminMapper.ToAdminDto(admin);
-
-            return adminDto;
-            
         }
 
         public async Task UpdateAdminAsync(AdminDto adminDto)

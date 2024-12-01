@@ -122,58 +122,91 @@ namespace SchoolSite.Server.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadMultipleImages(IFormFileCollection files, [FromForm] int galleryId)
         {
-            // Check if the Gallery exists
             var galleryExists = await _galleryRepository.GetGalleryByIdAsync(galleryId);
 
-            if (galleryExists == null)
-            {
-                return NotFound($"Gallery with ID {galleryId} not found.");
-            }
+            var uploadedImages = new List<GalleryImageDto>();
+            var failedUploads = new List<string>();
 
             if (files == null || files.Count == 0)
             {
                 return BadRequest(new { message = "No files provided for upload." });
             }
 
-            var uploadedImages = new List<GalleryImageDto>();
-
-            foreach (var file in files)
+            try
             {
-                if (file.Length > 0)
+                foreach (var file in files)
                 {
-                    // Define a dynamic path for the uploads folder
-                    var projectRoot = Directory.GetCurrentDirectory();
-                    var uploadsFolder = Path.Combine(projectRoot, "Uploads", "images", "galleries");
 
-                    // Generate a unique filename
-                    var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    // Save the file to the server
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    if (galleryExists == null)
                     {
-                        await file.CopyToAsync(stream);
+                        return NotFound($"Gallery with ID {galleryId} not found.");
                     }
 
-                    // Generate the relative path to store in the database
-                    var relativePath = Path.Combine("Uploads", "images", "galleries", fileName).Replace("\\", "/");
-
-                    // Create a DTO to return the saved details
-                    var galleryImageDto = new GalleryImageDto
+                    if (!new[] { ".jpg", ".png", ".jpeg" }.Contains(Path.GetExtension(file.FileName).ToLower()))
                     {
-                        ImagePath = relativePath,
-                        CreatedDate = DateTime.UtcNow,
-                        GalleryId = galleryId
-                    };
+                        failedUploads.Add(file.FileName);
+                        continue;
+                    }
 
-                    uploadedImages.Add(galleryImageDto);
+                    if (file.Length > 5 * 1024 * 1024) // 5 MB size limit 
+                    {
+                        failedUploads.Add(file.FileName);
+                        continue;
+                    }
+
+                    if (file.Length > 0)
+                    {
+                        var tasks = files.Select(async file =>
+                        {
+                            // Define a dynamic path for the uploads folder
+                            var projectRoot = Directory.GetCurrentDirectory();
+                            var uploadsFolder = Path.Combine(projectRoot, "Uploads", "images", "galleries");
+
+                            // Generate a unique filename
+                            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                            var filePath = Path.Combine(uploadsFolder, fileName);
+
+                            // Save the file to the server
+                            using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true))
+                            {
+                                await file.CopyToAsync(stream);
+                            }
+
+                            // Generate the relative path to store in the database
+                            var relativePath = Path.Combine("Uploads", "images", "galleries", fileName).Replace("\\", "/");
+
+                            // Create a DTO to return the saved details
+                            var galleryImageDto = new GalleryImageDto
+                            {
+                                ImagePath = relativePath,
+                                CreatedDate = DateTime.UtcNow,
+                                GalleryId = galleryId
+                            };
+
+                            uploadedImages.Add(galleryImageDto);
+                        });
+                        await Task.WhenAll(tasks);
+                        
+                    }
                 }
+
+                // Save the gallery image to the database
+                await _galleryImageRepository.AddRangeAsync(uploadedImages);
+
+                return Ok(new
+                {
+                    success = uploadedImages,
+                    errors = failedUploads
+                });
+
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error processing files: {ex.Message}");
+                return StatusCode(500, new { message = "An unexpected error occured. Please try again later." });
             }
 
-            // Save the gallery image to the database
-            await _galleryImageRepository.AddRangeAsync(uploadedImages);
-
-            return Ok(uploadedImages);
+            
 
         }
 

@@ -1,19 +1,19 @@
-<h2 class="text-center my-5">Galleries</h2>
+<h2 class="text-center my-5">Galerii foto</h2>
 
 <div class="d-flex flex-column">
   <a
     type="button"
     class="btn btn-primary my-2 col-1"
     routerLink="/galleries/create"
-    >Create</a
+    >Adaugă</a
   >
 </div>
 
 <div class="filter-container">
   <mat-form-field appearance="outline" class="year-filter">
-    <mat-label>Select Year</mat-label>
+    <mat-label>Selectează an</mat-label>
     <mat-select (selectionChange)="applyYearFilter($event.value)">
-      <mat-option value="All">All</mat-option>
+      <mat-option value="All">Toate</mat-option>
       <mat-option *ngFor="let year of availableYears" [value]="year">
         {{ year }}
       </mat-option>
@@ -21,7 +21,7 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="search-filter">
-    <mat-label>Search</mat-label>
+    <mat-label>Caută</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Search..." />
   </mat-form-field>
 </div>
@@ -29,43 +29,43 @@
 <div *ngIf="galleries.length > 0; else noGalleries" class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
     <ng-container matColumnDef="year">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Year</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>An</th>
       <td mat-cell *matCellDef="let element">{{ element.year }}</td>
     </ng-container>
 
     <ng-container matColumnDef="title">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Titlu</th>
       <td mat-cell *matCellDef="let element">{{ element.title }}</td>
     </ng-container>
 
     <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Descriere</th>
       <td mat-cell *matCellDef="let element">{{ element.description }}</td>
     </ng-container>
 
     <ng-container matColumnDef="createdDate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Created Date</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Creat la</th>
       <td mat-cell *matCellDef="let element">
         {{ element.createdDate | date : "short" }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="updatedDate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Updated Date</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Modificat la</th>
       <td mat-cell *matCellDef="let element">
         {{ element.updatedDate | date : "short" }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <th mat-header-cell *matHeaderCellDef>Acțiuni</th>
       <td mat-cell *matCellDef="let element">
         <button
           mat-button
           class="btn btn-outline-warning btn-sm m-2"
           (click)="editGallery(element.id)"
         >
-          Edit
+          Editează
         </button>
         <button
           mat-button
@@ -76,7 +76,7 @@
           data-bs-target="#exampleModal"
           (click)="selectedGalleryId = element.id"
         >
-          Delete
+          Șterge
         </button>
       </td>
     </ng-container>
@@ -101,7 +101,7 @@
 </div>
 
 <ng-template #noGalleries>
-  <p>No galleries available.</p>
+  <p>Nu sunt galerii disponibile.</p>
 </ng-template>
 
 <!-- Modal -->
@@ -116,7 +116,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Gallery</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Șterge galerie</h1>
         <button
           type="button"
           class="btn-close"
@@ -124,13 +124,11 @@
           aria-label="Close"
         ></button>
       </div>
-      <div class="modal-body">
-        Are you sure you want to delete this gallery ?
-      </div>
+      <div class="modal-body">Ești sigur că vrei să ștergi galeria?</div>
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Close
+          Închide
         </button>
         <button
           type="button"
@@ -139,7 +137,7 @@
             selectedGalleryId !== null ? deleteGallery(selectedGalleryId) : null
           "
         >
-          Delete
+          Șterge
         </button>
       </div>
     </div>

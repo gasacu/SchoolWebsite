@@ -1,5 +1,5 @@
 <h2 class="text-center my-5">
-  {{ isEditing ? "Edit" : "Create" }} Team Member
+  {{ isEditing ? "Editează" : "Creează" }} Membru Echipă
 </h2>
 
 <div class="text-danger text-center" *ngIf="errorMessage != ''">
@@ -8,12 +8,12 @@
 
 <form
   *ngIf="errorMessage === ''"
-  (ngSubmit)="onSubmit()"
+  (ngSubmit)="onSubmit($event)"
   #teamMemberForm="ngForm"
   class="border rounded p-5 w-75 mb-5 mx-auto"
 >
   <div class="mb-3">
-    <label class="form-label">Name*</label>
+    <label class="form-label">Nume complet*</label>
     <input
       required
       maxlength="64"
@@ -34,10 +34,10 @@
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Role*</label>
+    <label class="form-label">Rol*</label>
     <input
       required
-      maxlength="128"
+      maxlength="64"
       #role="ngModel"
       class="form-control"
       type="text"
@@ -49,84 +49,100 @@
         Role is required.
       </div>
       <div class="text-danger" *ngIf="role.errors?.['maxlength']">
-        Role cannot exceed 128 characters.
+        Role cannot exceed 64 characters.
       </div>
     </div>
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Department*</label>
-    <input
+    <label class="form-label">Departament*</label>
+    <select
       required
-      maxlength="128"
       #department="ngModel"
-      class="form-control"
-      type="text"
+      class="form-select"
       name="department"
       [(ngModel)]="teamMember.department"
-    />
+    >
+      <option disabled value="">-- Select Department --</option>
+      <option *ngFor="let dep of departments" [value]="dep.value">
+        {{ dep.description }}
+      </option>
+    </select>
     <div *ngIf="department.invalid && (department.touched || department.dirty)">
       <div class="text-danger" *ngIf="department.errors?.['required']">
         Department is required.
       </div>
-      <div class="text-danger" *ngIf="department.errors?.['maxlength']">
-        Department cannot exceed 128 characters.
-      </div>
     </div>
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Bio</label>
+    <label class="form-label">Facultate</label>
     <input
       class="form-control"
       type="text"
-      name="bio"
-      [(ngModel)]="teamMember.bio"
+      name="faculty"
+      [(ngModel)]="teamMember.faculty"
     />
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Upload Image</label>
+    <label class="form-label">Specialitate</label>
     <input
-      class="form-control d-none"
+      class="form-control"
+      type="text"
+      name="specialty"
+      [(ngModel)]="teamMember.specialty"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Imagine</label>
+    <input
       type="file"
-      id="imagePath"
-      (change)="onImageSelected($event)"
+      class="form-control d-none"
+      #fileInput
+      (change)="onFileSelect($event)"
     />
     <label
       class="form-control"
       for="imagePath"
       [ngClass]="{ 'text-muted': selectedFileName }"
     >
-      {{ selectedFileName || "Choose a file" }}
+      {{ selectedFileName || "Alege o Imagine" }}
     </label>
   </div>
-  <div
-    *ngIf="
-      imgPath === 'https://localhost:7047/Uploads/images/team-members/user.png'
-    "
-    class="text-muted"
-  >
-    No image uploaded. Please choose a file to upload a new image.
-  </div>
-  <div *ngIf="errorMessage" class="alert alert-danger">
-    {{ errorMessage }}
-  </div>
-  <div *ngIf="successMessage" class="alert alert-success">
-    {{ successMessage }}
-  </div>
 
-  <!-- Image preview section -->
-  <div *ngIf="imgPath" class="my-3">
+  <div
+    class="drag-drop"
+    (drop)="onFileDrop($event)"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+  >
+    <p
+      #text
+      *ngIf="
+        imgPath ===
+        'https://localhost:7047/Uploads/images/team-members/user.png'
+      "
+    >
+      Drag and drop an image here, or click to select a file
+    </p>
+    <div *ngIf="uploading">Uploading...</div>
     <img
       [src]="imgPath"
       alt="Team Member Image"
       class="img-thumbnail"
+      style="cursor: pointer"
       width="200px"
       height="200px"
-      (click)="viewImage(imgPath)"
-      style="cursor: pointer"
+      (click)="
+        imgPath ===
+        'https://localhost:7047/Uploads/images/team-members/user.png'
+          ? fileInput.click()
+          : viewImage(imgPath)
+      "
     />
+
     <button
       *ngIf="
         imgPath != 'https://localhost:7047/Uploads/images/team-members/user.png'
@@ -137,7 +153,7 @@
       class="btn btn-danger btn-sm mt-2"
       (click)="openDeleteImageModal()"
     >
-      Delete Image
+      Șterge
     </button>
   </div>
 
@@ -146,12 +162,10 @@
     type="submit"
     [disabled]="teamMemberForm.invalid"
   >
-    {{ isEditing ? "Save" : "Create" }}
+    {{ isEditing ? "Salvează" : "Creează" }}
   </button>
 
-  <button class="btn btn-secondary mt-3" (click)="goBack()">
-    Back to List
-  </button>
+  <button class="btn btn-secondary mt-3" (click)="goBack()">Înapoi</button>
 </form>
 
 <!-- Modal for Viewing Image -->
@@ -165,7 +179,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="viewImageModalLabel">View Image</h5>
+        <h5 class="modal-title" id="viewImageModalLabel">Vizualizare</h5>
         <button
           type="button"
           class="btn-close"
@@ -193,12 +207,13 @@
   tabindex="-1"
   aria-labelledby="deleteImageModalLabel"
   aria-hidden="true"
+  role="dialog"
 >
-  <div class="modal-dialog">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="deleteImageModalLabel">
-          Delete Image
+          Șterge imagine
         </h1>
         <button
           type="button"
@@ -207,14 +222,14 @@
           aria-label="Close"
         ></button>
       </div>
-      <div class="modal-body">Are you sure you want to delete the image ?</div>
+      <div class="modal-body">Ești sigur că vrei să ștergi imaginea?</div>
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Cancel
+          Renunță
         </button>
         <button type="button" class="btn btn-danger" (click)="deleteImage()">
-          Delete
+          Șterge
         </button>
       </div>
     </div>

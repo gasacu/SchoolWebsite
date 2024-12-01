@@ -14,27 +14,6 @@ namespace SchoolSite.Server.Repositories.Implementation
             _context = context;
         }
 
-        public async Task AddTeamMemberAsync(TeamMemberDto teamMemberDto)
-        {
-            var teamMember = TeamMemberMapper.ToTeamMember(teamMemberDto);
-
-            await _context.AddAsync(teamMember);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteTeamMemberAsync(int id)
-        {
-            var teamMemberDb = await _context.TeamMembers.FindAsync(id);
-
-            if (teamMemberDb == null)
-            {
-                throw new KeyNotFoundException($"Team Member with id {id} was not found.");
-            }
-
-            _context.TeamMembers.Remove(teamMemberDb);
-            await _context.SaveChangesAsync();
-        }
-
         public async Task<IEnumerable<TeamMemberDto>> GetAllAsync()
         {
             var teamMembers = new List<TeamMemberDto>();
@@ -61,6 +40,29 @@ namespace SchoolSite.Server.Repositories.Implementation
             return teamMemberDto;
         }
 
+        public async Task AddTeamMemberAsync(TeamMemberDto teamMemberDto)
+        {
+            var teamMember = TeamMemberMapper.ToTeamMember(teamMemberDto);
+
+            await _context.AddAsync(teamMember);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteTeamMemberAsync(int id)
+        {
+            var teamMemberDb = await _context.TeamMembers.FindAsync(id);
+
+            if (teamMemberDb == null)
+            {
+                throw new KeyNotFoundException($"Team Member with id {id} was not found.");
+            }
+
+            _context.TeamMembers.Remove(teamMemberDb);
+            await _context.SaveChangesAsync();
+        }
+
+        
+
         public async Task UpdateTeamMemberAsync(TeamMemberDto teamMemberDto)
         {
             var teamMemberDb = await _context.TeamMembers.FirstOrDefaultAsync(x => x.Id == teamMemberDto.Id);
@@ -71,7 +73,8 @@ namespace SchoolSite.Server.Repositories.Implementation
                 teamMemberDb.Name = teamMemberDto.Name;
                 teamMemberDb.Role = teamMemberDto.Role;
                 teamMemberDb.Department = teamMemberDto.Department;
-                teamMemberDb.Bio = teamMemberDto.Bio;
+                teamMemberDb.Faculty = teamMemberDto.Faculty;
+                teamMemberDb.Specialty = teamMemberDto.Specialty;
                 teamMemberDb.ImagePath = teamMemberDto.ImagePath;
 
                 _context.TeamMembers.Update(teamMemberDb);

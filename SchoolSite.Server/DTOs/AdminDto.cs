@@ -18,7 +18,7 @@ namespace SchoolSite.Server.DTOs
         public string Username { get; set; }
 
 
-        [StringLength(128, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 128 characters.")]
+        [StringLength(64, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 64 characters.")]
         [Required(ErrorMessage = "Password is required.")]
         public string PasswordHash { get; set; }
 
