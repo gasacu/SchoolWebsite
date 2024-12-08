@@ -1,5 +1,5 @@
 <h2 class="text-center my-5">
-  {{ isEditing ? "Edit" : "Create" }} Page Content
+  {{ isEditing ? "Editează" : "Creează" }} pagina
 </h2>
 
 <div class="text-danger text-center" *ngIf="errorMessage != ''">
@@ -8,70 +8,63 @@
 
 <form
   *ngIf="errorMessage === ''"
+  [formGroup]="editorForm"
   (ngSubmit)="onSubmit()"
-  #pageContentForm="ngForm"
   class="border rounded p-5 w-75 mb-5 mx-auto"
 >
   <div class="mb-3">
-    <label class="form-label">Page Name*</label>
+    <label class="form-label">Nume pagină*</label>
     <input
       required
       maxlength="64"
-      #pageName="ngModel"
       class="form-control"
       type="text"
       name="pageName"
-      [(ngModel)]="pageContent.pageName"
+      formControlName="pageName"
     />
-    <div *ngIf="pageName.invalid && (pageName.touched || pageName.dirty)">
-      <div class="text-danger" *ngIf="pageName.errors?.['required']">
+    <div
+      *ngIf="
+        editorForm.controls['pageName'].invalid &&
+        (editorForm.controls['pageName'].touched ||
+          editorForm.controls['pageName'].dirty)
+      "
+    >
+      <div
+        class="text-danger"
+        *ngIf="editorForm.controls['pageName'].errors?.['required']"
+      >
         Page Name is required.
       </div>
-      <div class="text-danger" *ngIf="pageName.errors?.['maxlength']">
+      <div
+        class="text-danger"
+        *ngIf="editorForm.controls['pageName'].errors?.['maxlength']"
+      >
         Page Name cannot exceed 64 characters.
       </div>
     </div>
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Content</label>
-    <input
-      class="form-control"
-      type="text"
+    <label class="form-label">Conținut</label>
+    <quill-editor
+      [style]="editorStyle"
+      formControlName="content"
+    ></quill-editor>
+  </div>
+
+  <!-- [(ngModel)]="pageContent.content"
       name="content"
-      [(ngModel)]="pageContent.content"
-    />
-  </div>
-
-  <!-- <div class="mb-3">
-    <label class="form-label">Created date</label>
-    <input
-      class="form-control"
-      type="date"
-      name="createdDate"
-      [(ngModel)]="pageContent.createdDate"
-    />
-  </div>
-
-  <div class="mb-3">
-    <label class="form-label">Updated date</label>
-    <input
-      class="form-control"
-      type="date"
-      name="updatedDate"
-      [(ngModel)]="pageContent.updatedDate"
-    />
-  </div> -->
+      [modules]="config" -->
 
   <button
     class="btn btn-primary mt-3 mx-5"
     type="submit"
-    [disabled]="pageContentForm.invalid"
+    [disabled]="editorForm.invalid"
   >
-    {{ isEditing ? "Save" : "Create" }}
+    {{ isEditing ? "Salvează" : "Creează" }}
   </button>
 
-  <button class="btn btn-secondary mt-3" (click)="goBack()">
-    Back to List
-  </button>
+  <button class="btn btn-secondary mt-3" (click)="goBack()">Înapoi</button>
 </form>
+
+<div [innerHTML]="pageContent.content"></div>

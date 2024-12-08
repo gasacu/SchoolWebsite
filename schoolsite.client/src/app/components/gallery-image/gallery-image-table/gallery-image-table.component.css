@@ -77,10 +77,8 @@ mat-grid-tile {
 }
 
 button {
-  background: none;
   border: none;
-  color: rgb(0, 0, 0);
-  font-size: 2rem;
+  font-size: 1rem;
   cursor: pointer;
 }
 

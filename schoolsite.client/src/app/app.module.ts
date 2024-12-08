@@ -16,7 +16,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { QuillModule } from 'ngx-quill';
 import { AdminTableComponent } from './components/admin/admin-table/admin-table.component';
 import { DocumentTableComponent } from './components/document/document-table/document-table.component';
 import { GalleryImageTableComponent } from './components/gallery-image/gallery-image-table/gallery-image-table.component';
@@ -62,6 +63,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     AppRoutingModule,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
+    QuillModule,
     RouterModule.forRoot([
       { path: '', component: AppComponent, pathMatch: 'full' },
     ]),

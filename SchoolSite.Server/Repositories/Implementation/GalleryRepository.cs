@@ -82,7 +82,12 @@ namespace SchoolSite.Server.Repositories.Implementation
 
         public async Task UpdateGalleryAsync(GalleryDto galleryDto)
         {
-            var galleryDb = await _context.Galleries.FirstOrDefaultAsync(x => x.Id == galleryDto.Id);
+            var galleryDb = await _context.Galleries.Include(g => g.GalleryImages).FirstOrDefaultAsync(x => x.Id == galleryDto.Id);
+
+            if (galleryDb == null)
+            {
+                throw new Exception("Gallery not found.");
+            }
 
             if (galleryDb != null)
             {

@@ -36,7 +36,6 @@ export class GalleryFormComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
-      console.log('id is ', id);
       if (id) {
         this.isEditing = true;
         this.loadGallery(+id);
@@ -68,8 +67,23 @@ export class GalleryFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    const updatedGallery = { ...this.gallery };
+    updatedGallery.galleryImages =
+      this.gallery.galleryImages?.map((image) => ({
+        id: image.id,
+        imagePath: image.imagePath,
+        galleryId: image.galleryId,
+        createdDate: image.createdDate,
+        gallery: {
+          id: this.gallery.id,
+          year: this.gallery.year,
+          title: this.gallery.title,
+          description: this.gallery.description,
+        },
+      })) || [];
+
     if (this.isEditing) {
-      this.galleryService.editGallery(this.gallery).subscribe({
+      this.galleryService.editGallery(updatedGallery).subscribe({
         next: () => {
           this.router.navigate(['/galleries']);
         },

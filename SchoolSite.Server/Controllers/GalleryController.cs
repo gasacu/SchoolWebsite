@@ -52,7 +52,7 @@ namespace SchoolSite.Server.Controllers
         {
             if (ModelState.IsValid == false)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             await _galleryRepository.AddGalleryAsync(galleryDto);
@@ -91,12 +91,13 @@ namespace SchoolSite.Server.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<GalleryDto>> UpdateGalleryAsync(int id, GalleryDto galleryDto)
         {
-            if (id != galleryDto.Id)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(new { errors });
             }
 
-            if (ModelState.IsValid == false)
+            if (id != galleryDto.Id)
             {
                 return BadRequest();
             }

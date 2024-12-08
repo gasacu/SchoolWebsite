@@ -15,7 +15,7 @@ namespace SchoolSite.Server.Entities
         [Required(ErrorMessage = "Gallery Id is required")]
         public int GalleryId { get; set; }
 
-        public Gallery Gallery { get; set; }
+        public Gallery? Gallery { get; set; }
 
     }
 }

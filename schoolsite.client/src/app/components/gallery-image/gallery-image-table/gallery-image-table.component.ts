@@ -31,7 +31,7 @@ export class GalleryImageTableComponent implements OnInit, AfterViewInit {
   selectedFiles: File[] = [];
   successMessage: string | null = null;
   currentPage = 1;
-  pageSize = 6;
+  pageSize = 10;
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
   @ViewChild('viewImageModal') viewImageModal!: ElementRef;
@@ -118,6 +118,12 @@ export class GalleryImageTableComponent implements OnInit, AfterViewInit {
     return URL.createObjectURL(file);
   }
 
+  resetFileInput(): void {
+    const inputElement = this.uploadImageInput.nativeElement;
+    inputElement.value = '';
+    this.cdr.detectChanges();
+  }
+
   removeSelectedFile(file: File): void {
     this.selectedFiles = this.selectedFiles.filter((f) => f !== file);
 
@@ -127,6 +133,7 @@ export class GalleryImageTableComponent implements OnInit, AfterViewInit {
     if (inputElement) {
       (this.uploadImageInput.nativeElement as HTMLInputElement).value = '';
     }
+    this.resetFileInput();
   }
 
   uploadMultipleImages(): void {
@@ -139,18 +146,19 @@ export class GalleryImageTableComponent implements OnInit, AfterViewInit {
     this.galleryImageService.uploadMultipleImages(formData).subscribe({
       next: (response) => {
         const images = Array.isArray(response) ? response : [];
-
         this.galleryImages = [...this.galleryImages, ...images];
         this.selectedFiles = [];
         this.successMessage = 'Images uploaded successfully.';
+
+        this.resetFileInput();
 
         setTimeout(() => (this.successMessage = null), 3000);
 
         this.loadGalleryImages(this.galleryId);
       },
       error: (err) => {
-        this.handleError(err, 'image deletion'),
-          alert('An error occurred during the upload process.');
+        this.handleError(err, 'image deletion');
+        alert('An error occurred during the upload process.');
       },
     });
   }

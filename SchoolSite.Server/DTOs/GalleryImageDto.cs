@@ -16,5 +16,7 @@ namespace SchoolSite.Server.DTOs
         [Required(ErrorMessage = "Gallery Id is required")]
         public int GalleryId { get; set; }
 
+        public GalleryDto? Gallery { get; set; }
+
     }
 }
